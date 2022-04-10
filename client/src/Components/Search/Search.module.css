@@ -1,0 +1,21 @@
+
+.search_row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.search_boxes{
+  display: flex;
+  flex-direction: row;
+}
+
+.animal_search_wrapper{
+  padding-right: 8px;
+}
+
+.submit_button{
+  text-align: right;
+}
