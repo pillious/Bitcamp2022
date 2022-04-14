@@ -14,6 +14,7 @@ const app = express();
 const fs = require("fs");
 const readline = require("readline");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const trackModel = require("./models/TrackModel");
 const descriptionModel = require("./models/DescriptionModel");
@@ -37,6 +38,10 @@ app.listen(port, () => {
 app.get("/", (req, resp) => {
     resp.send("Application Started.");
 });
+
+// app.get("/addDescription", (req, resp) => {
+//     (__dirname + '/views/addDescription.html');
+// });
 
 app.get("/rename", async (req, resp) => {
     const { oldName, newName } = req.query;
