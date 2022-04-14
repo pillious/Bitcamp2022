@@ -1,10 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-require("dotenv").config();
 const cors = require("cors");
 const app = express();
+require("dotenv").config();
 app.use(cors());
-const trackModel = require("./models");
+
+const trackModel = require("./models/TrackModel");
+const descriptionModel = require("./models/DescriptionModel");
+
 const port = process.env.PORT || 8000;
 
 const dbUsername = process.env.DATABASE_READONLY_USERNAME;
@@ -66,6 +69,16 @@ app.post("/getAllDistinctNames", async (req, resp) => {
 
     resp.status(200).send(docs);
 });
+
+app.get("/getDescriptionByName/:name", async (req, resp) => {
+    let doc;
+
+    if (req.params.name) {
+        doc = await trackModel.findOne(req.params.name);
+    }
+
+    resp.status(200).send(doc);
+})
 
 //Run the application on the specified port.
 app.listen(port, () => console.log(`Acaply listening on port ${port}.`));
