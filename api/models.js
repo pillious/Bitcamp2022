@@ -16,7 +16,7 @@ const TrackSchema = new mongoose.Schema({
   datetime: {
       type: Date
   }
-});
+}, { versionKey: false });
  
 const Track = mongoose.model("Track", TrackSchema);
  
