@@ -39,7 +39,7 @@ app.post("/getAnimalByName/:name", async (req, resp) => {
 
         docs = await trackModel.find(query).limit(limit);
     }
-    resp.send(docs);
+    resp.status(200).send(docs);
 });
 
 app.post("/getAnimalById/:id", async (req, reps) => {
@@ -56,7 +56,15 @@ app.post("/getAnimalById/:id", async (req, reps) => {
         docs = await trackModel.find(query).limit(limit);
     }
 
-    resp.send(docs);
+    resp.status(200).send(docs);
+});
+
+app.post("/getAllDistinctNames", async (req, resp) => {
+    let docs;
+
+    docs = await trackModel.distinct("animalName");
+
+    resp.status(200).send(docs);
 });
 
 //Run the application on the specified port.
