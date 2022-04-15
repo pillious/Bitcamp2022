@@ -5,9 +5,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
+        <link rel="stylesheet" href="addDescription.css" />
     </head>
     <body>
-        <form method="post" action="addDescription">
+        <p>Add a description for an animal in the database.</p>
+        <form method="post" action="addDescription" onsubmit="confirm('Do you want to submit?')">
             <input
                 type="text"
                 name="commonName"
@@ -25,17 +27,18 @@
                 id="description"
                 cols="30"
                 rows="10"
-                placeholder="Description"
-            >
-            </textarea>
+                placeholder="Animal Description"
+                spellcheck="true"
+            ></textarea>
             <textarea
                 name="citations"
                 id="citations"
-                ,
                 cols="30"
                 rows="10"
-                placeholder="Seperate multiple citations with commas"
+                placeholder="Citations (Seperate citations with commas)"
+                spellcheck="true"
             ></textarea>
+            <button type="submit">Submit</button>
         </form>
     </body>
 </html>

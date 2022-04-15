@@ -15,11 +15,15 @@ const fs = require("fs");
 const readline = require("readline");
 const mongoose = require("mongoose");
 const path = require("path");
+const bodyParser = require("body-parser");
 
 const trackModel = require("./models/TrackModel");
 const descriptionModel = require("./models/DescriptionModel");
 
 const port = process.env.PORT || 4000;
+
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const connection = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@animals.xu2eh.mongodb.net/animals?retryWrites=true&w=majority`;
 
@@ -39,9 +43,39 @@ app.get("/", (req, resp) => {
     resp.send("Application Started.");
 });
 
-// app.get("/addDescription", (req, resp) => {
-//     (__dirname + '/views/addDescription.html');
-// });
+app.get("/addDescriptionPage", (req, resp) => {
+    resp.sendFile(__dirname + "/public/views/addDescription.html");
+});
+
+app.post("/addDescription", async (req, resp) => {
+    let respmsg = "An error occured.";
+    let desc;
+
+    const { commonName, scientificName, description, citations } = req.body;
+    if (
+        commonName.trim() != "" &&
+        scientificName.trim() != "" &&
+        description.trim() != ""
+    ) {
+        let citationsArr = [];
+        if (citations.trim() != "")
+            citationsArr = citations
+                .split(",")
+                .map((c) => c.trim())
+                .filter((c) => c != "");
+
+        desc = new descriptionModel({
+            commonName: commonName.trim().toUpperCase(),
+            scientificName: scientificName.trim().toUpperCase(),
+            body: description.trim(),
+            citations: citationsArr,
+        });
+
+        await desc.save();
+        respmsg = "Successfully added description to databse!";
+    }
+    resp.send({ respmsg, data: desc });
+});
 
 app.get("/rename", async (req, resp) => {
     const { oldName, newName } = req.query;
