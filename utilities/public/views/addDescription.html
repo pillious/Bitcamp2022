@@ -4,12 +4,32 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="stylesheet" href="addDescription.css" />
+        <title>Add Description</title>
+
+        <style>
+            form {
+                display: flex;
+                flex-direction: column;
+                width: 300px;
+            }
+
+            input,
+            textarea {
+                margin-bottom: 16px;
+            }
+
+            button {
+                width: 100px;
+            }
+        </style>
     </head>
     <body>
         <p>Add a description for an animal in the database.</p>
-        <form method="post" action="addDescription" onsubmit="confirm('Do you want to submit?')">
+        <form
+            method="post"
+            action="addDescription"
+            onsubmit="return confirm('Do you want to submit?')"
+        >
             <input
                 type="text"
                 name="commonName"
