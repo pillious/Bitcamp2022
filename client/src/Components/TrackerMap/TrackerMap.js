@@ -33,7 +33,7 @@ const hashString = (s) =>
 
 const parse = (data) => {
     let transformedData = [];
-    console.log(data);
+
     data.forEach((point) => {
         transformedData.push({
             name: point.animalName,
@@ -108,8 +108,8 @@ const TrackerMap = () => {
                     initialViewState={INITIAL_VIEW_STATE}
                     controller={{touchRotate: false}}
                     layers={layers}
-                    width="100vw"
-                    height="80vh"
+                    width="60vw"
+                    height="500px"
                 >
                     <Map
                         mapStyle="mapbox://styles/mapbox/satellite-v9"
