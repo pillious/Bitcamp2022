@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add Description</title>
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="/styles/addDescription.css"
+        />
+
+        <script src="/scripts/addDescription.js"></script>
+    </head>
+    <body>
+        <p>Select an action:</p>
+
+        <div class="change_btns">
+            <button id="change_add">Add</button>
+            <button id="change_update">Update</button>
+            <button id="change_delete">Delete</button>
+        </div>
+
+        <form
+            method="post"
+            onsubmit="()=>{return confirm('Do you want to submit?')}"
+        >
+            <input
+                type="text"
+                name="existing_common_name"
+                id="existing_common_name"
+                placeholder="Existing Common Name"
+            />
+            <input
+                type="text"
+                name="common_name"
+                id="common_name"
+                placeholder="Common Name"
+            />
+            <input
+                type="text"
+                name="scientific_name"
+                id="scientific_name"
+                placeholder="Scientific Name"
+            />
+            <textarea
+                name="description"
+                id="description"
+                cols="30"
+                rows="10"
+                placeholder="Animal Description"
+                spellcheck="true"
+            ></textarea>
+            <textarea
+                name="citations"
+                id="citations"
+                cols="30"
+                rows="10"
+                placeholder="Citations (Seperate citations with commas)"
+                spellcheck="true"
+            ></textarea>
+
+            <div class="submit_btns">
+                <button
+                    type="submit"
+                    formaction="addDescription"
+                    id="submit_add"
+                >
+                    Add
+                </button>
+                <button
+                    type="submit"
+                    formaction="updateDescription"
+                    id="submit_update"
+                >
+                    Update
+                </button>
+                <button
+                    type="submit"
+                    formaction="deleteDescription"
+                    id="submit_delete"
+                >
+                    Delete
+                </button>
+            </div>
+        </form>
+
+        <div class="existing_names">
+            <p>Animal description already in database:</p>
+            <% names.forEach(function(name) { %>
+            <div><%= name.toLowerCase() %></div>
+            <% }); %>
+        </div>
+    </body>
+</html>

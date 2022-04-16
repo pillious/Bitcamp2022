@@ -1,0 +1,24 @@
+.change_btns {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #000;
+    width: 300px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+input,
+textarea {
+    margin-bottom: 16px;
+}
+
+.submit_btns {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #000;
+    width: 300px;
+}

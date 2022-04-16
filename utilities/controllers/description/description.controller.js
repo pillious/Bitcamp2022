@@ -1,17 +1,12 @@
-const path = require("path");
 const Description = require("./models/DescriptionModel");
 
-exports.fetch_description_page = (req, resp) => {
-    resp.sendFile(
-        path.join(
-            __dirname,
-            "..",
-            "..",
-            "public",
-            "views",
-            "addDescription.html"
-        )
+exports.fetch_description_page = async (req, resp) => {
+    let names = [];
+    names = await Description.distinct("commonName").catch((err) =>
+        console.log(err)
     );
+
+    resp.render("addDescription", { names });
 };
 
 exports.add_description = async (req, resp) => {
