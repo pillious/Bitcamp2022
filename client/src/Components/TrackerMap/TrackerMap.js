@@ -11,85 +11,43 @@ const key =
 const INITIAL_VIEW_STATE = {
     longitude: 23.81669,
     latitude: -19.7853,
-    zoom: 7,
-    pitch: 0,
-    bearing: 0,
+    zoom: 1,
 };
-
-const c = [
-    { coordinate: [23.52362, -19.3915] },
-    { coordinate: [23.5235, -19.3917] },
-    { coordinate: [23.52346, -19.3917] },
-    { coordinate: [23.52343, -19.3916] },
-    { coordinate: [23.52343, -19.3915] },
-    { coordinate: [23.52338, -19.3917] },
-    { coordinate: [23.54001, -19.3926] },
-    { coordinate: [23.56088, -19.4167] },
-    { coordinate: [23.56769, -19.4209] },
-];
 
 const ICON_MAPPING = {
-    marker: { x: 0, y: 0, width: 64, height: 96, mask: true },
+    marker: {
+        x: 0,
+        y: 0,
+        width: 128,
+        height: 128,
+        mask: true,
+    },
 };
 
-// const layer2 = new IconLayer({
-//     id: "IconLayer",
-//     data: c,
-
-//     /* props from IconLayer class */
-
-//     // alphaCutoff: 0.05,
-//     // billboard: true,
-//     // getAngle: 0,
-//     getColor: (d) => [Math.sqrt(d.exits), 140, 0],
-//     getIcon: (d) => "marker",
-//     // getPixelOffset: [0, 0],
-//     getPosition: (d) => d.coordinate,
-//     getSize: (d) => 5,
-//     iconAtlas:
-//         "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",
-//     iconMapping: {
-//         marker: {
-//             x: 0,
-//             y: 0,
-//             width: 128,
-//             height: 128,
-//             anchorY: 128,
-//             mask: true,
-//         },
-//     },
-//     // onIconError: null,
-//     // sizeMaxPixels: Number.MAX_SAFE_INTEGER,
-//     // sizeMinPixels: 0,
-//     sizeScale: 8,
-//     // sizeUnits: 'pixels',
-
-//     /* props inherited from Layer class */
-
-//     // autoHighlight: false,
-//     // coordinateOrigin: [0, 0, 0],
-//     // coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-//     // highlightColor: [0, 0, 128, 128],
-//     // modelMatrix: null,
-//     // opacity: 1,
-//     pickable: true,
-//     // visible: true,
-//     // wrapLongitude: false,
-// });
+// Hash string to value between 0 and 255.
+const hashString = (s) =>
+    Math.abs(
+        s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0) %
+            256
+    );
 
 const parse = (data) => {
-    console.log(data); // Temp: for debugging.
-
     let transformedData = [];
+    console.log(data);
     data.forEach((point) => {
-        transformedData.push({ coordinate: [point.long, point.lat] });
+        transformedData.push({
+            name: point.animalName,
+            id: point.animalId,
+            datetime: point.datetime,
+            coordinate: [point.long, point.lat],
+        });
     });
 
     return transformedData;
 };
 
 const TrackerMap = () => {
-    const [layer, setLayer] = useState(null);
+    const [layers, setLayers] = useState([]);
 
     useEffect(() => {
         const createLayer = async () => {
@@ -97,43 +55,47 @@ const TrackerMap = () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
             };
-            const resp = await fetch(
-                "http://localhost:8000/getAnimalByName/Plains Zebra",
+
+            let allAnimals = await fetch(
+                "http://localhost:8000/track/getAllDistinctNames",
                 requestOptions
-            ).catch((err) => console.error(err));
+            );
+            allAnimals = await allAnimals.json();
 
-            if (resp.ok) {
-                const data = parse(await resp.json());
-                console.log(data);
+            let allData = [];
+            let allLayers = [];
 
-                setLayer(
-                    new IconLayer({
-                        id: "IconLayer",
-                        data: data,
-                        getColor: (d) => [Math.sqrt(d.exits), 140, 0],
+            for (const animal of allAnimals) {
+                const resp = await fetch(
+                    `http://localhost:8000/track/getAnimalByName/${animal}`,
+                    requestOptions
+                ).catch((err) => console.error(err));
+
+                if (resp.ok) {
+                    const data = parse(await resp.json());
+                    allData = [...allData, ...data];
+
+                    allLayers.push(new IconLayer({
+                        id: Math.random().toString(),
+                        data: allData,
+                        getColor: (d) => [hashString(d.name), 140, 0],
                         getIcon: (d) => "marker",
                         getPosition: (d) => d.coordinate,
                         getSize: (d) => 5,
                         iconAtlas:
                             "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",
-                        iconMapping: {
-                            marker: {
-                                x: 0,
-                                y: 0,
-                                width: 128,
-                                height: 128,
-                                anchorY: 128,
-                                mask: true,
-                            },
-                        },
+                        iconMapping: ICON_MAPPING,
                         sizeScale: 8,
                         pickable: true,
-                    })
-                );
+                    }));
+                } else {
+                    console.err(
+                        `Something went wrong while fetching data for ${animal}`
+                    );
+                }
             }
-            else {
-                console.err("Something went wrong while fetching data.");
-            }
+
+            setLayers(allLayers);
         };
 
         createLayer().catch((err) => console.error(err));
@@ -144,20 +106,14 @@ const TrackerMap = () => {
             <div className={classes.map_wrapper}>
                 <DeckGL
                     initialViewState={INITIAL_VIEW_STATE}
-                    controller={true}
-                    layers={[layer]}
+                    controller={{touchRotate: false}}
+                    layers={layers}
                     width="100vw"
                     height="80vh"
                 >
                     <Map
-                        initialViewState={{
-                            latitude: 37.8,
-                            longitude: -122.4,
-                            zoom: 1,
-                        }}
                         mapStyle="mapbox://styles/mapbox/satellite-v9"
                         mapboxAccessToken={key}
-                        renderWorldCopies={false}
                     ></Map>
                 </DeckGL>
             </div>

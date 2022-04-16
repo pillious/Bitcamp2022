@@ -13,7 +13,7 @@ code {
         monospace;      
 }
 
-/* Ugly code DON'T LOOK */
+/* Styles for the deck.gl generated components. */
 #deckgl-wrapper {
     position: relative !important;
     display: flex;
