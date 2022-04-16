@@ -1,4 +1,5 @@
 const path = require("path");
+const Description = require("./models/DescriptionModel");
 
 exports.fetch_description_page = (req, resp) => {
     resp.sendFile(
@@ -30,7 +31,7 @@ exports.add_description = async (req, resp) => {
                 .map((c) => c.trim())
                 .filter((c) => c != "");
 
-        desc = new descriptionModel({
+        desc = new Description({
             commonName: commonName.trim().toUpperCase(),
             scientificName: scientificName.trim().toUpperCase(),
             body: description.trim(),
