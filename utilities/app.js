@@ -13,7 +13,8 @@ const app = express();
 require("dotenv").config();
 
 const path = require("path");
-const bodyParser = require("body-parser");
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.use(express.static(__dirname + '/public'));
 app.set('views', path.join(__dirname, 'views'));
@@ -21,8 +22,6 @@ app.set('view engine', 'ejs');
 
 const connectDatabase = require("./utils/database");
 connectDatabase();
-
-app.use(bodyParser.urlencoded({ extended: true }));
 
 const trackRoutes = require("./routes/track");
 const descriptionRoutes = require("./routes/description");
