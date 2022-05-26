@@ -9,7 +9,7 @@ exports.fetch_description_page = async (req, resp) => {
 
 exports.add_description = async (req, resp) => {
     let respmsg = "An error occured.";
-    let desc;
+    let doc;
 
     const {
         common_name: commonName,
@@ -29,23 +29,23 @@ exports.add_description = async (req, resp) => {
                 .map((c) => c.trim())
                 .filter((c) => c != "");
 
-        desc = new Description({
+        doc = new Description({
             commonName: commonName.trim().toUpperCase(),
             scientificName: scientificName.trim().toUpperCase(),
             body: description.trim(),
             citations: citationsArr,
         });
 
-        await desc.save();
+        await doc.save();
         respmsg = "Successfully added description to database!";
     }
 
-    resp.send({ respmsg, data: desc });
+    resp.send({ respmsg, data: doc });
 };
 
 exports.update_description = async (req, resp) => {
     let respmsg = "An error occured.";
-    let desc;
+    let doc;
     let namesInDb;
 
     const {
@@ -79,7 +79,7 @@ exports.update_description = async (req, resp) => {
                 query = { ...query, citations: citationsArr };
             }
 
-            desc = await Description.findOneAndUpdate(
+            doc = await Description.findOneAndUpdate(
                 { commonName: existingCommonName.trim().toUpperCase() },
                 query,
                 { new: true }
@@ -89,8 +89,22 @@ exports.update_description = async (req, resp) => {
         } else {
             respmsg = `No animal named: '${existingCommonName}'`;
         }
-
     }
 
-    resp.send({ respmsg, data: desc });
+    resp.send({ respmsg, data: doc });
+};
+
+exports.delete_description = async (res, resp) => {
+    let respmsg = "An error occured.";
+    let doc;
+
+    const { common_name: commonName } = res.body;
+
+    if (commonName.trim() != "") {
+        doc = await Description.deleteOne({ commonName });
+
+        respmsg = `Successfully deleted ${commonName}'s description`;
+    }
+
+    resp.send({ respmsg, data: doc });
 };
