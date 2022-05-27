@@ -1,11 +1,13 @@
+import { Fragment, useEffect, useState, useRef } from "react";
 import DeckGL from "@deck.gl/react";
-import Map from "react-map-gl";
+import Map, { Marker } from "react-map-gl";
 import classes from "./TrackerMap.module.css";
-import { IconLayer } from "@deck.gl/layers";
-import React, { Fragment, useEffect, useState } from "react";
+import * as Constants from "../../utils/constants";
+import * as Utils from "../../utils/utils";
+import Description from "./Description";
+import Pin from "./Pin";
 
-const key =
-    "pk.eyJ1IjoicGlsbGlvdXMiLCJhIjoiY2wxczBncmhuMXgyMDNldGNzNWYwODNscSJ9.s0SUe4XQt47TqXluA4O5kQ";
+const key = Constants.MAPBOX_KEY;
 
 // Viewport settings
 const INITIAL_VIEW_STATE = {
@@ -14,80 +16,50 @@ const INITIAL_VIEW_STATE = {
     zoom: 1,
 };
 
-const ICON_MAPPING = {
-    marker: {
-        x: 0,
-        y: 0,
-        width: 128,
-        height: 128,
-        mask: true,
-    },
-};
-
-// Hash string to value between 0 and 255.
-const hashString = (s) =>
-    Math.abs(
-        s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0) %
-            256
-    );
-
-const parse = (data) => {
-    let transformedData = [];
-
-    data.forEach((point) => {
-        transformedData.push({
-            name: point.animalName,
-            id: point.animalId,
-            datetime: point.datetime,
-            coordinate: [point.long, point.lat],
-        });
-    });
-
-    return transformedData;
+const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
 };
 
 const TrackerMap = () => {
-    const [layers, setLayers] = useState([]);
+    const mapRef = useRef();
+    const deckRef = useRef();
+    const [markers, setMarkers] = useState([]);
 
     useEffect(() => {
         const createLayer = async () => {
-            const requestOptions = {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-            };
-
             let allAnimals = await fetch(
-                "http://localhost:8000/track/getAllDistinctNames",
+                `${Constants.API_BASE_URL}/track/getAllDistinctNames`,
                 requestOptions
             );
             allAnimals = await allAnimals.json();
 
-            let allData = [];
-            let allLayers = [];
+            let pins = [];
 
             for (const animal of allAnimals) {
+                // TODO: reduce number of API calls.
                 const resp = await fetch(
-                    `http://localhost:8000/track/getAnimalByName/${animal}`,
+                    `${Constants.API_BASE_URL}/track/getAnimalByName/${animal}`,
                     requestOptions
                 ).catch((err) => console.error(err));
 
                 if (resp.ok) {
-                    const data = parse(await resp.json());
-                    allData = [...allData, ...data];
+                    let markerColor = Utils.pastelHSLColor();
 
-                    allLayers.push(new IconLayer({
-                        id: Math.random().toString(),
-                        data: allData,
-                        getColor: (d) => [hashString(d.name), 140, 0],
-                        getIcon: (d) => "marker",
-                        getPosition: (d) => d.coordinate,
-                        getSize: (d) => 5,
-                        iconAtlas:
-                            "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",
-                        iconMapping: ICON_MAPPING,
-                        sizeScale: 8,
-                        pickable: true,
-                    }));
+                    let pts = await resp.json();
+                    pts = pts.map((a, idx) => (
+                        <Marker
+                            key={`${a.animalId}-${idx}`}
+                            longitude={a.long}
+                            latitude={a.lat}
+                        >
+                            {/* Marker Icon */}
+                            <Pin color={markerColor} />
+                        </Marker>
+                    ));
+                    pins = [...pins, ...pts];
+
+                    console.log(pts);
                 } else {
                     console.err(
                         `Something went wrong while fetching data for ${animal}`
@@ -95,40 +67,42 @@ const TrackerMap = () => {
                 }
             }
 
-            setLayers(allLayers);
+            setMarkers(pins);
         };
 
         createLayer().catch((err) => console.error(err));
     }, []);
 
+    // TEMP
+    const clickHandler = () => {
+        console.log(mapRef);
+        console.log(deckRef);
+    };
+
     return (
         <Fragment>
+            {/* TEMP */}
+            <button onClick={clickHandler}>Click me.</button>
+
             <div className={classes.map_wrapper}>
                 <DeckGL
                     initialViewState={INITIAL_VIEW_STATE}
-                    controller={{touchRotate: false}}
-                    layers={layers}
-                    width="60vw"
+                    controller={{ touchRotate: false }}
+                    width="100%"
                     height="500px"
+                    ref={deckRef}
                 >
                     <Map
                         mapStyle="mapbox://styles/mapbox/satellite-v9"
                         mapboxAccessToken={key}
-                    ></Map>
+                        ref={mapRef}
+                    >
+                        {markers}
+                    </Map>
                 </DeckGL>
             </div>
-            <p className={classes.something}>
-                Burchell's zebra (Equus burchellii): <br />
-                Plains zebra range in height from 1-1.5 m (3.5-5 ft.) and can
-                weigh almost 450 kg (1000 lbs.). Plains zebras have broad
-                stripes that run horizontally towards the back and vertically
-                towards the front, meeting in a triangle in the middle of their
-                bodies. They prefer open grasslands, open woodlands, and open
-                scrub environments. Plains zebras are herbivores and are known
-                to travel great distances to find food and water when the dry
-                season arrives.
-                https://animaldiversity.org/accounts/Equus_burchellii/
-            </p>
+
+            <Description />
         </Fragment>
     );
 };
