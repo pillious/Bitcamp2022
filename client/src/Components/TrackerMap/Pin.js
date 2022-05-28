@@ -1,8 +1,14 @@
-const Pin = ({size = 16, color}) => {
+import { memo } from "react";
+import PropTypes from "prop-types";
 
-
+const Pin = ({ size = 16, color }) => {
     return (
-        <svg height={size} fill={color} viewBox="0 0 297 297">
+        <svg
+            height={size}
+            fill={color}
+            viewBox="0 0 297 297"
+            style={{ cursor: "pointer", zIndex: 10000 }}
+        >
             <path
                 d="M148.5,0C87.43,0,37.747,49.703,37.747,110.797c0,91.026,99.729,179.905,103.976,183.645
 		c1.936,1.705,4.356,2.559,6.777,2.559c2.421,0,4.841-0.853,6.778-2.559c4.245-3.739,103.975-92.618,103.975-183.645
@@ -19,4 +25,9 @@ const Pin = ({size = 16, color}) => {
     );
 };
 
-export default Pin;
+Pin.propTypes = {
+    size: PropTypes.number,
+    color: PropTypes.string.isRequired,
+};
+
+export default memo(Pin);

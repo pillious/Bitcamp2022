@@ -1,90 +1,59 @@
-import { Fragment, useEffect, useState, useRef } from "react";
-import DeckGL from "@deck.gl/react";
+import { Fragment, useRef } from "react";
+import { useSelector } from "react-redux";
+// import DeckGL from "@deck.gl/react";
+// import classes from "./TrackerMap.module.css";
+import Description from "./Description";
 import Map, { Marker } from "react-map-gl";
-import classes from "./TrackerMap.module.css";
 import * as Constants from "../../utils/constants";
 import * as Utils from "../../utils/utils";
-import Description from "./Description";
 import Pin from "./Pin";
 
-const key = Constants.MAPBOX_KEY;
-
 // Viewport settings
-const INITIAL_VIEW_STATE = {
-    longitude: 23.81669,
-    latitude: -19.7853,
-    zoom: 1,
-};
-
-const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-};
+// const INITIAL_VIEW_STATE = {
+//     longitude: 23.81669,
+//     latitude: -19.7853,
+//     zoom: 1,
+// };
 
 const TrackerMap = () => {
     const mapRef = useRef();
-    const deckRef = useRef();
-    const [markers, setMarkers] = useState([]);
 
-    useEffect(() => {
-        const createLayer = async () => {
-            let allAnimals = await fetch(
-                `${Constants.API_BASE_URL}/track/getAllDistinctNames`,
-                requestOptions
-            );
-            allAnimals = await allAnimals.json();
+    const markers = useSelector((state) => state.map.markers);
 
-            let pins = [];
+    // const clickHandler = (event) => {
+    //     event.originalEvent.stopPropagation();
+    //     console.log(event);
+    // }
 
-            for (const animal of allAnimals) {
-                // TODO: reduce number of API calls.
-                const resp = await fetch(
-                    `${Constants.API_BASE_URL}/track/getAnimalByName/${animal}`,
-                    requestOptions
-                ).catch((err) => console.error(err));
-
-                if (resp.ok) {
-                    let markerColor = Utils.pastelHSLColor();
-
-                    let pts = await resp.json();
-                    pts = pts.map((a, idx) => (
-                        <Marker
-                            key={`${a.animalId}-${idx}`}
-                            longitude={a.long}
-                            latitude={a.lat}
-                        >
-                            {/* Marker Icon */}
-                            <Pin color={markerColor} />
-                        </Marker>
-                    ));
-                    pins = [...pins, ...pts];
-
-                    console.log(pts);
-                } else {
-                    console.err(
-                        `Something went wrong while fetching data for ${animal}`
-                    );
-                }
-            }
-
-            setMarkers(pins);
-        };
-
-        createLayer().catch((err) => console.error(err));
-    }, []);
+    const markerElems = markers.map((m, idx) => {
+        m = JSON.parse(m);
+        return (
+            <Marker
+                key={`${m.animalId}-${idx}`}
+                longitude={m.long}
+                latitude={m.lat}
+                onClick={() => {
+                    console.log("clicked");
+                }}
+            >
+                <Pin color={Utils.buildHSLString(m.color)} />
+            </Marker>
+        );
+    });
 
     // TEMP
-    const clickHandler = () => {
+    const clickme = () => {
         console.log(mapRef);
-        console.log(deckRef);
     };
+
+    console.log(`${markers.length} markers created.`);
 
     return (
         <Fragment>
             {/* TEMP */}
-            <button onClick={clickHandler}>Click me.</button>
+            <button onClick={clickme}>Click me.</button>
 
-            <div className={classes.map_wrapper}>
+            {/* <div className={classes.map_wrapper}>
                 <DeckGL
                     initialViewState={INITIAL_VIEW_STATE}
                     controller={{ touchRotate: false }}
@@ -94,13 +63,29 @@ const TrackerMap = () => {
                 >
                     <Map
                         mapStyle="mapbox://styles/mapbox/satellite-v9"
-                        mapboxAccessToken={key}
+                        mapboxAccessToken={Constants.MAPBOX_KEY}
                         ref={mapRef}
                     >
-                        {markers}
+                        {markerElems}
                     </Map>
                 </DeckGL>
-            </div>
+            </div> */}
+
+            <Map
+                initialViewState={{
+                    latitude: 40,
+                    longitude: -100,
+                    zoom: 3.5,
+                    bearing: 0,
+                    pitch: 0,
+                }}
+                style={{width: "100%", height: "500px"}}
+                mapStyle="mapbox://styles/mapbox/satellite-v9"
+                mapboxAccessToken={Constants.MAPBOX_KEY}
+                ref={mapRef}
+            >
+                {markerElems}
+            </Map>
 
             <Description />
         </Fragment>

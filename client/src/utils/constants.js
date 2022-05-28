@@ -3,3 +3,7 @@ export const MAPBOX_KEY =
     "pk.eyJ1IjoicGlsbGlvdXMiLCJhIjoiY2wxczBncmhuMXgyMDNldGNzNWYwODNscSJ9.s0SUe4XQt47TqXluA4O5kQ";
 export const MARKER_IMG =
     "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png";
+export const REQUEST_OPTIONS = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+};
