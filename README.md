@@ -1,3 +1,5 @@
 ### Bitcamp 2022 Hackathon - WilderTrace
 
-Devpost: [Link](https://bitcamp2022.devpost.com/)
+### Best Educational Hack
+
+Devpost: [Link](https://devpost.com/software/wild-stats)
