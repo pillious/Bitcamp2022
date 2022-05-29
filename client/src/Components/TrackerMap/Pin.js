@@ -1,3 +1,7 @@
+/**
+ * The actual SVG icon used by the markers.
+ */
+
 import { memo } from "react";
 import PropTypes from "prop-types";
 

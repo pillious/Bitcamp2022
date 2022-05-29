@@ -9,7 +9,7 @@ import * as Utils from "../utils/utils";
 export const fetchMarkers = () => {
     return async (dispatch) => {
         let allAnimals = await fetch(
-            `${Constants.API_BASE_URL}/track/getAllDistinctNames`,
+            `${Constants.API_BASE_URL}track/getAllDistinctNames`,
             Constants.REQUEST_OPTIONS
         );
         allAnimals = await allAnimals.json();
@@ -19,7 +19,7 @@ export const fetchMarkers = () => {
         for (const animal of allAnimals) {
             // TODO: reduce number of API calls.
             const resp = await fetch(
-                `${Constants.API_BASE_URL}/track/getAnimalByName/${animal}`,
+                `${Constants.API_BASE_URL}track/getAnimalByName/${animal}`,
                 Constants.REQUEST_OPTIONS
             ).catch((err) => console.error(err));
 

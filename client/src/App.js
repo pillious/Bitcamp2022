@@ -1,22 +1,32 @@
-// import classes from './App.module.css';
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import Search from "./Components/Search/Search";
 import TrackerMap from "./Components/TrackerMap/TrackerMap";
-import { fetchMarkers } from "./store/map-actions";
+import { useGetAnimalMarkersByNameQuery } from "./services/mapApi";
+import { mapActions } from "./store/map-slice";
 
 const App = () => {
     const dispatch = useDispatch();
 
+    // Load Initial Markers
+    // https://redux-toolkit.js.org/rtk-query/api/created-api/hooks#usequery
+    const { data, isSuccess, error } =
+        useGetAnimalMarkersByNameQuery("PLAINS ZEBRA");
     useEffect(() => {
-        dispatch(fetchMarkers());
-    }, [dispatch])
+        if (isSuccess && data?.length > 0)
+            dispatch(mapActions.replaceMarkers(data));
+    }, [isSuccess, dispatch]); // Will fire even if query was skipped.
+
+    // TEMP ERROR LOGGING
+    useEffect(() => {
+        if (error) console.error(error);
+    }, [error]);
 
     return (
-        <div>
+        <>
             <Search />
             <TrackerMap />
-        </div>
+        </>
     );
 };
 

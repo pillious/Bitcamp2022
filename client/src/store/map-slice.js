@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import * as Utils from "../utils/utils";
 
 const initialState = {
-    mapInstance: null,
     markers: [],
 };
 
@@ -10,8 +10,20 @@ const mapSlice = createSlice({
     initialState,
     reducers: {
         replaceMarkers(state, action) {
-            state.markers = action.payload;
-        }
+            const { payload } = action;
+
+            console.log(payload);
+
+            if (Array.isArray(payload)) {
+                let markerColor = Utils.pastelHSLColor();
+
+                const pts = payload.map((pt) =>
+                    JSON.stringify({ ...pt, color: markerColor })
+                );
+
+                state.markers = pts;
+            }
+        },
     },
 });
 

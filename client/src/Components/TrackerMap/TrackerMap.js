@@ -1,29 +1,37 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useContext } from "react";
 import { useSelector } from "react-redux";
-// import DeckGL from "@deck.gl/react";
-// import classes from "./TrackerMap.module.css";
-import Description from "./Description";
-import Map, { Marker } from "react-map-gl";
+import Map, { Marker, NavigationControl } from "react-map-gl";
 import * as Constants from "../../utils/constants";
 import * as Utils from "../../utils/utils";
+import Description from "./Description";
 import Pin from "./Pin";
+import MapContext from "../../store/map-context";
 
-// Viewport settings
-// const INITIAL_VIEW_STATE = {
-//     longitude: 23.81669,
-//     latitude: -19.7853,
-//     zoom: 1,
-// };
+// Map initial viewport settings
+const INITIAL_VIEW_STATE = {
+    longitude: 24,
+    latitude: -20,
+    zoom: 0,
+};
+
+// What to resize the map to when a amarker is clicked.
+const OFFSET = 0.0025;
 
 const TrackerMap = () => {
-    const mapRef = useRef();
+    const mapRef = useContext(MapContext);
 
     const markers = useSelector((state) => state.map.markers);
 
-    // const clickHandler = (event) => {
-    //     event.originalEvent.stopPropagation();
-    //     console.log(event);
-    // }
+    const clickHandler = (event) => {
+        const longlat = event.target.getLngLat();
+
+        const bounds = [
+            [longlat.lng - OFFSET, longlat.lat - OFFSET], // [minlng, minlat]
+            [longlat.lng + OFFSET, longlat.lat + OFFSET], // [maxlng, maxlat]
+        ];
+
+        mapRef.current.fitBounds(bounds, { padding: 40, duration: 3000 });
+    };
 
     const markerElems = markers.map((m, idx) => {
         m = JSON.parse(m);
@@ -32,9 +40,7 @@ const TrackerMap = () => {
                 key={`${m.animalId}-${idx}`}
                 longitude={m.long}
                 latitude={m.lat}
-                onClick={() => {
-                    console.log("clicked");
-                }}
+                onClick={clickHandler}
             >
                 <Pin color={Utils.buildHSLString(m.color)} />
             </Marker>
@@ -53,38 +59,20 @@ const TrackerMap = () => {
             {/* TEMP */}
             <button onClick={clickme}>Click me.</button>
 
-            {/* <div className={classes.map_wrapper}>
-                <DeckGL
-                    initialViewState={INITIAL_VIEW_STATE}
-                    controller={{ touchRotate: false }}
-                    width="100%"
-                    height="500px"
-                    ref={deckRef}
-                >
-                    <Map
-                        mapStyle="mapbox://styles/mapbox/satellite-v9"
-                        mapboxAccessToken={Constants.MAPBOX_KEY}
-                        ref={mapRef}
-                    >
-                        {markerElems}
-                    </Map>
-                </DeckGL>
-            </div> */}
-
             <Map
-                initialViewState={{
-                    latitude: 40,
-                    longitude: -100,
-                    zoom: 3.5,
-                    bearing: 0,
-                    pitch: 0,
-                }}
-                style={{width: "100%", height: "500px"}}
-                mapStyle="mapbox://styles/mapbox/satellite-v9"
+                initialViewState={INITIAL_VIEW_STATE}
+                dragRotate={false}
+                touchPitch={false}
+                // Currently no way to only disable rotate.
+                // touchZoomRotate={false}
+                style={{ width: "100%", height: "500px" }}
+                mapStyle={Constants.MAP_STYLE}
                 mapboxAccessToken={Constants.MAPBOX_KEY}
                 ref={mapRef}
             >
                 {markerElems}
+
+                <NavigationControl />
             </Map>
 
             <Description />
