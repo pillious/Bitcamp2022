@@ -5,6 +5,8 @@ import TrackerMap from "./Components/TrackerMap/TrackerMap";
 import { useGetAnimalMarkersByNameQuery } from "./services/mapApi";
 import { mapActions } from "./store/map-slice";
 
+let isInitialDataLoaded = false;
+
 const App = () => {
     const dispatch = useDispatch();
 
@@ -13,8 +15,10 @@ const App = () => {
     const { data, isSuccess, error } =
         useGetAnimalMarkersByNameQuery("PLAINS ZEBRA");
     useEffect(() => {
-        if (isSuccess && data?.length > 0)
+        if (!isInitialDataLoaded && isSuccess && data?.length > 0) {
             dispatch(mapActions.replaceMarkers(data));
+            isInitialDataLoaded = true;
+        }
     }, [isSuccess, dispatch]); // Will fire even if query was skipped.
 
     // TEMP ERROR LOGGING

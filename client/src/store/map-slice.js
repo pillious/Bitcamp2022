@@ -12,16 +12,30 @@ const mapSlice = createSlice({
         replaceMarkers(state, action) {
             const { payload } = action;
 
-            console.log(payload);
+            if (payload && Array.isArray(payload)) {
+                let replacement = [];
 
-            if (Array.isArray(payload)) {
-                let markerColor = Utils.pastelHSLColor();
+                if (payload.length > 0) {
+                    let markerColor = Utils.pastelHSLColor();
 
-                const pts = payload.map((pt) =>
-                    JSON.stringify({ ...pt, color: markerColor })
-                );
+                    const boundingBox = Utils.buildBoundingBox(payload);
+                    const vectors = Utils.buildVectors(payload);
 
-                state.markers = pts;
+                    console.log(boundingBox);
+                    console.log(vectors.features);
+
+                    const obj = {
+                        markers: payload,
+                        vectors,
+                        boundingBox,
+                        color: markerColor,
+                    };
+                    replacement.push(JSON.stringify(obj));
+                }
+
+                state.markers = replacement;
+            } else {
+                console.error("replaceMarkers() -> payload not an array.");
             }
         },
     },

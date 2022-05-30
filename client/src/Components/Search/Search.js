@@ -4,7 +4,7 @@
 
 import SubmitButton from "./SubmitButton";
 import AnimalSearch from "./AnimalSearch";
-import ContinentSearch from "./ContinentSearch";
+// import ContinentSearch from "./ContinentSearch";
 import classes from "./Search.module.css";
 
 const Search = () => {

@@ -6,6 +6,7 @@ import * as Utils from "../../utils/utils";
 import Description from "./Description";
 import Pin from "./Pin";
 import MapContext from "../../store/map-context";
+import Vectors from "./Vectors";
 
 // Map initial viewport settings
 const INITIAL_VIEW_STATE = {
@@ -14,45 +15,56 @@ const INITIAL_VIEW_STATE = {
     zoom: 0,
 };
 
-// What to resize the map to when a amarker is clicked.
+// Fallback sizing of bounding box when zooming in on marker.
 const OFFSET = 0.0025;
 
 const TrackerMap = () => {
     const mapRef = useContext(MapContext);
+    const markersArr = useSelector((state) => state.map.markers);
 
-    const markers = useSelector((state) => state.map.markers);
+    const zoomInOnMarker = (event, boundingBox) => {
+        let bounds;
 
-    const clickHandler = (event) => {
-        const longlat = event.target.getLngLat();
-
-        const bounds = [
-            [longlat.lng - OFFSET, longlat.lat - OFFSET], // [minlng, minlat]
-            [longlat.lng + OFFSET, longlat.lat + OFFSET], // [maxlng, maxlat]
-        ];
-
+        if (boundingBox) bounds = boundingBox;
+        else {
+            const longlat = event.target.getLngLat();
+            bounds = [
+                [longlat.lng - OFFSET, longlat.lat - OFFSET], // [minlng, minlat]
+                [longlat.lng + OFFSET, longlat.lat + OFFSET], // [maxlng, maxlat]
+            ];
+        }
         mapRef.current.fitBounds(bounds, { padding: 40, duration: 3000 });
     };
 
-    const markerElems = markers.map((m, idx) => {
-        m = JSON.parse(m);
-        return (
-            <Marker
-                key={`${m.animalId}-${idx}`}
-                longitude={m.long}
-                latitude={m.lat}
-                onClick={clickHandler}
-            >
-                <Pin color={Utils.buildHSLString(m.color)} />
-            </Marker>
-        );
-    });
+    const markerElems = () => {
+        let markers = [];
+        markersArr.forEach((strObj) => {
+            let obj = JSON.parse(strObj);
+            markers = markers.concat(
+                obj.markers.map((marker, idx) => (
+                    <Marker
+                        key={`${marker.animalId}-${idx}`}
+                        longitude={marker.long}
+                        latitude={marker.lat}
+                        onClick={(e) => zoomInOnMarker(e, obj.boundingBox)}
+                    >
+                        <Pin color={Utils.buildHSLString(obj.color)} />
+                    </Marker>
+                ))
+            );
+        });
+
+        return markers;
+    };
+
+    console.log(markerElems());
 
     // TEMP
     const clickme = () => {
         console.log(mapRef);
     };
 
-    console.log(`${markers.length} markers created.`);
+    console.log("Map component rendered");
 
     return (
         <Fragment>
@@ -70,8 +82,9 @@ const TrackerMap = () => {
                 mapboxAccessToken={Constants.MAPBOX_KEY}
                 ref={mapRef}
             >
-                {markerElems}
+                {markerElems()}
 
+                <Vectors />
                 <NavigationControl />
             </Map>
 
