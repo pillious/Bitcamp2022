@@ -1,48 +1,46 @@
-import { useSelector } from "react-redux";
 import { Source, Layer } from "react-map-gl";
 import * as Utils from "../../utils/utils";
+import PropTypes from "prop-types";
 
-const Vectors = () => {
-    const markersArr = useSelector((state) => state.map.markers);
-
+const Vectors = ({ markersObj }) => {
     // https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/
     let featureCollection = {
         type: "FeatureCollection",
         features: [],
     };
-    let color = "white";
 
-    if (markersArr?.length > 0) {
-        let vectors = markersArr
-            .map((strObj) => JSON.parse(strObj).vectors)
-            .flat();
-        featureCollection.features = vectors.map((vector) => {
-            return {
-                type: "Feature",
-                geometry: {
-                    type: "LineString",
-                    coordinates: vector,
-                },
-            };
-        });
+    featureCollection.features = markersObj.vectors.map((vector) => {
+        return {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: vector,
+            },
+        };
+    });
 
-        let temp = JSON.parse(markersArr[0]).color;
-        color = Utils.buildHSLString([temp[0], 100, 50]);
-    }
+    const color = Utils.buildHSLString([markersObj.color[0], 100, 50]);
 
     console.log(featureCollection);
 
     return (
-        <Source id="vectors" type="geojson" data={featureCollection}>
-            {/* <Layer {...LINELAYER_STYLES} /> */}
+        <Source
+            id={`${markersObj.markers[0].animalId}_source`}
+            type="geojson"
+            data={featureCollection}
+        >
             <Layer
-                id="vectors"
+                id={`$${markersObj.markers[0].animalId}_line_layer`}
                 type="line"
                 layout={{ "line-join": "round", "line-cap": "round" }}
                 paint={{ "line-color": color, "line-width": 1 }}
             />
         </Source>
     );
+};
+
+Vectors.propTypes = {
+    markersObj: PropTypes.object.isRequired,
 };
 
 export default Vectors;

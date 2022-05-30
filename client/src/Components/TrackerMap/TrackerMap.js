@@ -1,12 +1,11 @@
 import { Fragment, useContext } from "react";
 import { useSelector } from "react-redux";
-import Map, { Marker, NavigationControl } from "react-map-gl";
-import * as Constants from "../../utils/constants";
-import * as Utils from "../../utils/utils";
-import Description from "./Description";
-import Pin from "./Pin";
+import Map, { NavigationControl } from "react-map-gl";
 import MapContext from "../../store/map-context";
+import * as Constants from "../../utils/constants";
+import Description from "./Description";
 import Vectors from "./Vectors";
+import Markers from "./Markers";
 
 // Map initial viewport settings
 const INITIAL_VIEW_STATE = {
@@ -15,62 +14,15 @@ const INITIAL_VIEW_STATE = {
     zoom: 0,
 };
 
-// Fallback sizing of bounding box when zooming in on marker.
-const OFFSET = 0.0025;
-
 const TrackerMap = () => {
     const mapRef = useContext(MapContext);
+
     const markersArr = useSelector((state) => state.map.markers);
-
-    const zoomInOnMarker = (event, boundingBox) => {
-        let bounds;
-
-        if (boundingBox) bounds = boundingBox;
-        else {
-            const longlat = event.target.getLngLat();
-            bounds = [
-                [longlat.lng - OFFSET, longlat.lat - OFFSET], // [minlng, minlat]
-                [longlat.lng + OFFSET, longlat.lat + OFFSET], // [maxlng, maxlat]
-            ];
-        }
-        mapRef.current.fitBounds(bounds, { padding: 40, duration: 3000 });
-    };
-
-    const markerElems = () => {
-        let markers = [];
-        markersArr.forEach((strObj) => {
-            let obj = JSON.parse(strObj);
-            markers = markers.concat(
-                obj.markers.map((marker, idx) => (
-                    <Marker
-                        key={`${marker.animalId}-${idx}`}
-                        longitude={marker.long}
-                        latitude={marker.lat}
-                        onClick={(e) => zoomInOnMarker(e, obj.boundingBox)}
-                    >
-                        <Pin color={Utils.buildHSLString(obj.color)} />
-                    </Marker>
-                ))
-            );
-        });
-
-        return markers;
-    };
-
-    console.log(markerElems());
-
-    // TEMP
-    const clickme = () => {
-        console.log(mapRef);
-    };
 
     console.log("Map component rendered");
 
     return (
         <Fragment>
-            {/* TEMP */}
-            <button onClick={clickme}>Click me.</button>
-
             <Map
                 initialViewState={INITIAL_VIEW_STATE}
                 dragRotate={false}
@@ -82,9 +34,23 @@ const TrackerMap = () => {
                 mapboxAccessToken={Constants.MAPBOX_KEY}
                 ref={mapRef}
             >
-                {markerElems()}
+                {Array.isArray(markersArr) &&
+                    markersArr.map((strObj) => {
+                        let obj = JSON.parse(strObj);
+                        return (
+                            <Fragment key={Math.random()}>
+                                <Markers
+                                    markersObj={obj}
+                                    key={`${obj.markers[0].animalId}_markers`}
+                                />
+                                <Vectors
+                                    markersObj={obj}
+                                    key={`${obj.markers[0].animalId}_vectors`}
+                                />
+                            </Fragment>
+                        );
+                    })}
 
-                <Vectors />
                 <NavigationControl />
             </Map>
 
