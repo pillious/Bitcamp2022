@@ -16,9 +16,7 @@ const INITIAL_VIEW_STATE = {
 
 const TrackerMap = () => {
     const mapRef = useContext(MapContext);
-
     const markersArr = useSelector((state) => state.map.markers);
-
     console.log("Map component rendered");
 
     return (
@@ -37,16 +35,11 @@ const TrackerMap = () => {
                 {Array.isArray(markersArr) &&
                     markersArr.map((strObj) => {
                         let obj = JSON.parse(strObj);
+                        console.log(obj);
                         return (
                             <Fragment key={Math.random()}>
-                                <Markers
-                                    markersObj={obj}
-                                    key={`${obj.markers[0].animalId}_markers`}
-                                />
-                                <Vectors
-                                    markersObj={obj}
-                                    key={`${obj.markers[0].animalId}_vectors`}
-                                />
+                                <Markers markersObj={obj} />
+                                <Vectors markersObj={obj} />
                             </Fragment>
                         );
                     })}

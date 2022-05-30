@@ -21,8 +21,6 @@ const Vectors = ({ markersObj }) => {
 
     const color = Utils.buildHSLString([markersObj.color[0], 100, 50]);
 
-    console.log(featureCollection);
-
     return (
         <Source
             id={`${markersObj.markers[0].animalId}_source`}

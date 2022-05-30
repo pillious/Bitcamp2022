@@ -21,9 +21,6 @@ const mapSlice = createSlice({
                     const boundingBox = Utils.buildBoundingBox(payload);
                     const vectors = Utils.buildVectors(payload);
 
-                    console.log(boundingBox);
-                    console.log(vectors.features);
-
                     const obj = {
                         markers: payload,
                         vectors,
