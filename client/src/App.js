@@ -4,6 +4,7 @@ import Search from "./Components/Search/Search";
 import TrackerMap from "./Components/TrackerMap/TrackerMap";
 import { useGetAnimalMarkersByNameQuery } from "./services/mapApi";
 import { mapActions } from "./store/map-slice";
+import * as Constants from "./utils/constants";
 
 let isInitialDataLoaded = false;
 
@@ -12,19 +13,15 @@ const App = () => {
 
     // Load Initial Markers
     // https://redux-toolkit.js.org/rtk-query/api/created-api/hooks#usequery
-    const { data, isSuccess, error } =
-        useGetAnimalMarkersByNameQuery("PLAINS ZEBRA");
+    const { data, isSuccess } = useGetAnimalMarkersByNameQuery(
+        Constants.INITIAL_ANIMAL_ONLOAD
+    );
     useEffect(() => {
         if (!isInitialDataLoaded && isSuccess && data?.length > 0) {
-            dispatch(mapActions.replaceMarkers(data));
+            dispatch(mapActions.setMarkers(data));
             isInitialDataLoaded = true;
         }
-    }, [isSuccess, dispatch]); // Will fire even if query was skipped.
-
-    // TEMP ERROR LOGGING
-    useEffect(() => {
-        if (error) console.error(error);
-    }, [error]);
+    }, [isSuccess, dispatch]);
 
     return (
         <>

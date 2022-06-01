@@ -25,7 +25,7 @@ const TrackerMap = () => {
                 initialViewState={INITIAL_VIEW_STATE}
                 dragRotate={false}
                 touchPitch={false}
-                // Currently no way to only disable rotate.
+                // Currently no way to disable rotate w/o disabling zoom.
                 // touchZoomRotate={false}
                 style={{ width: "100%", height: "500px" }}
                 mapStyle={Constants.MAP_STYLE}

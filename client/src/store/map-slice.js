@@ -2,14 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import * as Utils from "../utils/utils";
 
 const initialState = {
+    animalNames: [],
     markers: [],
+    animalSearchTerm: "",
 };
 
 const mapSlice = createSlice({
     name: "map",
     initialState,
     reducers: {
-        replaceMarkers(state, action) {
+        setMarkers(state, action) {
             const { payload } = action;
 
             if (payload && Array.isArray(payload)) {
@@ -32,8 +34,19 @@ const mapSlice = createSlice({
 
                 state.markers = replacement;
             } else {
-                console.error("replaceMarkers() -> payload not an array.");
+                console.error("setMarkers() -> payload not an array.");
             }
+        },
+        setAnimalNames(state, action) {
+            const { payload } = action;
+            if (payload && Array.isArray(payload)) state.animalNames = payload;
+            else {
+                console.log("setAnimalNames() -> payload not an array");
+            }
+        },
+        setAnimalSearchTerm(state, action) {
+            const { payload } = action;
+            if (payload) state.animalNames = payload; 
         },
     },
 });

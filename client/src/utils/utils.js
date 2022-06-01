@@ -5,6 +5,13 @@ export const pastelHSLColor = () => [360 * Math.random(), 100, 70];
 export const buildHSLString = (vals) =>
     `hsl(${vals[0]}, ${vals[1]}%, ${vals[2]}%)`;
 
+// Each word in string is capitalized.
+export const toProperCase = (str) =>
+    str.replace(
+        /\w\S*/g,
+        (str) => str.charAt(0).toUpperCase() + str.substr(1).toLowerCase()
+    );
+
 // Finds the max & min coordinates in the set of markers.
 export const buildBoundingBox = (markers) => {
     let boundingBox = [];
