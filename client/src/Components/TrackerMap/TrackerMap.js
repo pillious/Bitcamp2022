@@ -6,6 +6,7 @@ import * as Constants from "../../utils/constants";
 import Description from "./Description";
 import Vectors from "./Vectors";
 import Markers from "./Markers";
+import useSearch from "../../hooks/useSearch";
 
 // Map initial viewport settings
 const INITIAL_VIEW_STATE = {
@@ -19,6 +20,8 @@ const TrackerMap = () => {
     const markersArr = useSelector((state) => state.map.markers);
     console.log("Map component rendered");
 
+    useSearch();
+
     return (
         <Fragment>
             <Map
@@ -30,9 +33,11 @@ const TrackerMap = () => {
                 style={{ width: "100%", height: "500px" }}
                 mapStyle={Constants.MAP_STYLE}
                 mapboxAccessToken={Constants.MAPBOX_KEY}
+                styleDiffing={false}
                 ref={mapRef}
             >
                 {Array.isArray(markersArr) &&
+                    markersArr.length > 0 &&
                     markersArr.map((strObj) => {
                         let obj = JSON.parse(strObj);
                         console.log(obj);
