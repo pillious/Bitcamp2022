@@ -8,13 +8,6 @@ import Vectors from "./Vectors";
 import Markers from "./Markers";
 import useSearch from "../../hooks/useSearch";
 
-// // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-// import mapboxgl from "!mapbox-gl";
-
-// // prettier-ignore
-// // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-// mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
-
 // Map initial viewport settings
 const INITIAL_VIEW_STATE = {
     longitude: 24,
