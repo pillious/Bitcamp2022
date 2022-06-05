@@ -3,7 +3,11 @@ export const INITIAL_ANIMAL_ONLOAD = "PLAINS ZEBRA";
 /**
  * API Request Constants
  */
-export const API_BASE_URL = "http://localhost:8000/";
+// export const API_BASE_URL = "http://localhost:8000/";
+export const API_BASE_URL =
+    process.env.NODE_ENV === "development"
+        ? "http://localhost:8000/api"
+        : "https://bitcamp2022-api.vercel.app/api";
 export const REQUEST_OPTIONS = {
     method: "POST",
     headers: { "Content-Type": "application/json" },

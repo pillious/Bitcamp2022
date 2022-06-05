@@ -18,6 +18,7 @@ const INITIAL_VIEW_STATE = {
 const TrackerMap = () => {
     const mapRef = useContext(MapContext);
     const markersArr = useSelector((state) => state.map.markers);
+    console.log(markersArr);
     useSearch();
 
     return useMemo(() => {
