@@ -16,6 +16,7 @@ const AnimalSearch = () => {
     );
 
     useEffect(() => {
+        console.log(value);
         if (value) dispatch(mapActions.setAnimalSearchTerm(value));
     }, [value]);
 
