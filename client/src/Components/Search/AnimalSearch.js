@@ -23,6 +23,7 @@ const AnimalSearch = () => {
     const { data, isSuccess } = useGetAllDistinctNamesQuery();
     useEffect(() => {
         if (isSuccess && data?.data?.length > 0)
+        // if (isSuccess && data && data.data && data.data.length > 0) 
             dispatch(mapActions.setAnimalNames(data.data));
     }, [isSuccess, dispatch]);
 

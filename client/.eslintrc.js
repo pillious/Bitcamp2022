@@ -10,9 +10,12 @@ module.exports = {
         es6: true,
         jest: true,
     },
+    // plugins: ["import"],
     rules: {
         // suppress errors for missing 'import React' in files
         "react/react-in-jsx-scope": "off",
+        // "import/no-webpack-loader-syntax": 2,
+        // "import/no-unresolved": 2,
     },
 };
 

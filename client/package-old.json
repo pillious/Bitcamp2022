@@ -35,10 +35,21 @@
       "react-app/jest"
     ]
   },
-  "browserslist": [
-    "defaults",
-    "not IE 11"
-  ],
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "not chrome < 51",
+      "not safari < 10",
+      "not android < 51"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^8.17.0",
