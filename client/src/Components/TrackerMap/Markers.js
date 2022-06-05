@@ -9,6 +9,8 @@ import PropTypes from "prop-types";
 const OFFSET = 0.0025;
 
 const Markers = ({ markersObj }) => {
+    console.log("Markers rendered");
+
     const mapRef = useContext(MapContext);
 
     const zoomInOnMarker = (event, boundingBox) => {
@@ -32,9 +34,7 @@ const Markers = ({ markersObj }) => {
             latitude={marker.lat}
             onClick={(e) => zoomInOnMarker(e, markersObj.boundingBox)}
         >
-            <Pin
-                color={Utils.buildHSLString(markersObj.color)}
-            />
+            <Pin color={Utils.buildHSLString(markersObj.color)} />
         </Marker>
     ));
 

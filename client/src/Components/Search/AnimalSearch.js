@@ -9,15 +9,20 @@ import { mapActions } from "../../store/map-slice";
 
 const AnimalSearch = () => {
     const dispatch = useDispatch();
-    const animalNames = useSelector((state) => state.map.animalNames);
+    let animalNames = useSelector((state) => state.map.animalNames);
 
     const [value, setValue] = useState(
         Utils.toProperCase(Constants.INITIAL_ANIMAL_ONLOAD)
     );
 
+    useEffect(() => {
+        console.log(value);
+        if (value) dispatch(mapActions.setAnimalSearchTerm(value));
+    }, [value]);
+
     const { data, isSuccess } = useGetAllDistinctNamesQuery();
     useEffect(() => {
-        if (isSuccess && data?.length > 0) 
+        if (isSuccess && data?.length > 0)
             dispatch(mapActions.setAnimalNames(data));
     }, [isSuccess, dispatch]);
 

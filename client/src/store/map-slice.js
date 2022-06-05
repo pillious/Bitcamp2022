@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as Utils from "../utils/utils";
+import * as Constants from "../utils/constants";
 
 const initialState = {
     animalNames: [],
     markers: [],
-    animalSearchTerm: "",
+    animalSearchTerm: Constants.INITIAL_ANIMAL_ONLOAD,
 };
 
 const mapSlice = createSlice({
@@ -46,7 +47,7 @@ const mapSlice = createSlice({
         },
         setAnimalSearchTerm(state, action) {
             const { payload } = action;
-            if (payload) state.animalNames = payload; 
+            if (payload) state.animalSearchTerm = payload; 
         },
     },
 });

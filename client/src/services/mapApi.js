@@ -3,6 +3,7 @@ import * as Constants from "../utils/constants";
 
 export const mapApi = createApi({
     reducerPath: "mapApi",
+    keepUnusedDataFor: 300,
     baseQuery: fetchBaseQuery({ baseUrl: Constants.API_BASE_URL }),
     endpoints: (builder) => ({
         getAllDistinctNames: builder.query({
