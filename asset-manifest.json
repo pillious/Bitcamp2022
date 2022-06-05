@@ -1,18 +1,17 @@
 {
   "files": {
-    "main.css": "/Bitcamp2022/static/css/main.3fdc682e.css",
-    "main.js": "/Bitcamp2022/static/js/main.27f5a705.js",
-    "static/js/483.a7c6262a.chunk.js": "/Bitcamp2022/static/js/483.a7c6262a.chunk.js",
-    "static/js/787.c4e7f8f9.chunk.js": "/Bitcamp2022/static/js/787.c4e7f8f9.chunk.js",
-    "static/js/mapbox-gl-csp-worker.bd4a5af2.worker.js": "/Bitcamp2022/static/js/mapbox-gl-csp-worker.bd4a5af2.worker.js",
-    "index.html": "/Bitcamp2022/index.html",
-    "main.3fdc682e.css.map": "/Bitcamp2022/static/css/main.3fdc682e.css.map",
-    "main.27f5a705.js.map": "/Bitcamp2022/static/js/main.27f5a705.js.map",
-    "483.a7c6262a.chunk.js.map": "/Bitcamp2022/static/js/483.a7c6262a.chunk.js.map",
-    "787.c4e7f8f9.chunk.js.map": "/Bitcamp2022/static/js/787.c4e7f8f9.chunk.js.map"
+    "main.css": "/static/css/main.3fdc682e.css",
+    "main.js": "/static/js/main.031f3365.js",
+    "static/js/483.26aaea29.chunk.js": "/static/js/483.26aaea29.chunk.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/static/js/787.c4e7f8f9.chunk.js",
+    "index.html": "/index.html",
+    "main.3fdc682e.css.map": "/static/css/main.3fdc682e.css.map",
+    "main.031f3365.js.map": "/static/js/main.031f3365.js.map",
+    "483.26aaea29.chunk.js.map": "/static/js/483.26aaea29.chunk.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3fdc682e.css",
-    "static/js/main.27f5a705.js"
+    "static/js/main.031f3365.js"
   ]
 }
