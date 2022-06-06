@@ -1,4 +1,5 @@
 const Track = require("../../../models/TrackModel.model");
+const Description = require("../../../models/DescriptionModel.model");
 const constants = require("../../../utils/constants");
 const utils = require("../../../utils/utils");
 const dbConnect = require("../../../utils/database");
@@ -19,7 +20,13 @@ module.exports = async (req, res) => {
                         limit = parseInt(req.body.limit);
                     else limit = constants.DEFAULT_LIMIT;
 
-                    data = await Track.find(query).limit(limit);
+                    // Runs the API requests in parallel.
+                    let [docs, desc] = await Promise.all([
+                        Track.find(query).limit(limit),
+                        Description.findOne({ commonName: query.animalName }),
+                    ]);
+
+                    data = {markers: docs, desc};
                 }
 
                 res.json({ status: 200, message: "ok", data });
