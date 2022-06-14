@@ -30,7 +30,7 @@ const useSearch = () => {
     // }, [isSuccess, isFetching, dispatch]);
 
     useEffect(() => {
-        if (data && Array.isArray(data.data)) {
+        if (data && Array.isArray(data.data.markers)) {
             dispatch(mapActions.setMarkers(data.data));
         }
     }, [data]);

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import { Marker } from "react-map-gl";
 import Pin from "./Pin";
 import MapContext from "../../store/map-context";
@@ -8,11 +8,12 @@ import PropTypes from "prop-types";
 // Fallback sizing of bounding box when zooming in on marker.
 const OFFSET = 0.0025;
 
-const Markers = ({ markersObj }) => {
+const Markers = ({ markersObj, openPopup }) => {
     console.log("Markers rendered");
 
     const mapRef = useContext(MapContext);
 
+    // eslint-disable-next-line no-unused-vars
     const zoomInOnMarker = (event, boundingBox) => {
         let bounds;
 
@@ -32,7 +33,13 @@ const Markers = ({ markersObj }) => {
             key={`${marker.animalId}_${idx}_marker`}
             longitude={marker.long}
             latitude={marker.lat}
-            onClick={(e) => zoomInOnMarker(e, markersObj.boundingBox)}
+            // onClick={(e) => zoomInOnMarker(e, markersObj.boundingBox)}
+            onClick={(e) => {
+                // If we let the click event propagates to the map, it will immediately close the popup
+                // with `closeOnClick: true`
+                e.originalEvent.stopPropagation();
+                openPopup(marker.lat, marker.long, markersObj.desc);
+            }}
         >
             <Pin color={Utils.buildHSLString(markersObj.color)} />
         </Marker>
@@ -43,6 +50,7 @@ const Markers = ({ markersObj }) => {
 
 Markers.propTypes = {
     markersObj: PropTypes.object.isRequired,
+    openPopup: PropTypes.func.isRequired,
 };
 
-export default Markers;
+export default memo(Markers);
