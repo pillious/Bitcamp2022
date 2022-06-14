@@ -1,24 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import * as Constants from "../../utils/constants";
 import * as Utils from "../../utils/utils";
 import { useGetAllDistinctNamesQuery } from "../../services/mapApi";
 import { mapActions } from "../../store/map-slice";
+import PropTypes from "prop-types";
 
-const AnimalSearch = () => {
+const AnimalSearch = (props) => {
     const dispatch = useDispatch();
     let animalNames = useSelector((state) => state.map.animalNames);
-
-    const [value, setValue] = useState(
-        Utils.toProperCase(Constants.INITIAL_ANIMAL_ONLOAD)
-    );
-
-    useEffect(() => {
-        console.log(value);
-        if (value) dispatch(mapActions.setAnimalSearchTerm(value));
-    }, [value]);
 
     const { data, isSuccess } = useGetAllDistinctNamesQuery();
     useEffect(() => {
@@ -31,12 +22,17 @@ const AnimalSearch = () => {
             disablePortal
             id="animal_autocomplete"
             sx={{ width: 300 }}
-            value={value}
+            value={props.value}
             options={animalNames.map((a) => Utils.toProperCase(a))}
-            onChange={(event, newVal) => setValue(newVal)}
+            onChange={(event, newVal) => props.updateSearch(newVal)}
             renderInput={(params) => <TextField {...params} label="Animals" />}
         />
     );
+};
+
+AnimalSearch.propTypes = {
+    value: PropTypes.string.isRequired,
+    updateSearch: PropTypes.func.isRequired,
 };
 
 export default AnimalSearch;

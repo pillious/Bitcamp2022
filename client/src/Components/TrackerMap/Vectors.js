@@ -25,12 +25,12 @@ const Vectors = ({ markersObj }) => {
 
     return (
         <Source
-            id={`${markersObj.markers[0].animalId}_source`}
+            id="source"
             type="geojson"
             data={featureCollection}
         >
             <Layer
-                id={`$${markersObj.markers[0].animalId}_line_layer`}
+                id="line_layer"
                 type="line"
                 layout={{ "line-join": "round", "line-cap": "round" }}
                 paint={{ "line-color": color, "line-width": 1 }}
