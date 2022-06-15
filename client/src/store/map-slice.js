@@ -49,7 +49,7 @@ const mapSlice = createSlice({
         },
         setAnimalSearchTerm(state, action) {
             const { payload } = action;
-            if (payload) state.animalSearchTerm = payload; 
+            if (payload) state.animalSearchTerm = payload;
         },
     },
 });

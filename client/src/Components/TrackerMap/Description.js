@@ -1,17 +1,41 @@
-const Description = () => {
+import PropTypes from "prop-types";
+import * as Utils from "../../utils/utils";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import classes from "./Description.module.css";
+
+const Description = ({ animalInfo }) => {
+    const { commonName, scientificName, body, citations } = animalInfo;
+
     return (
-        <p>
-            Burchell&apos;s zebra (Equus burchellii): <br />
-            Plains zebra range in height from 1-1.5 m (3.5-5 ft.) and can weigh
-            almost 450 kg (1000 lbs.). Plains zebras have broad stripes that run
-            horizontally towards the back and vertically towards the front,
-            meeting in a triangle in the middle of their bodies. They prefer
-            open grasslands, open woodlands, and open scrub environments. Plains
-            zebras are herbivores and are known to travel great distances to
-            find food and water when the dry season arrives.
-            https://animaldiversity.org/accounts/Equus_burchellii/
-        </p>
+        <div className={classes.wrapper}>
+            <Paper className={classes.Paper} elevation={5}>
+                <h1 className={classes.name}>{`${Utils.toProperCase(
+                    commonName
+                )} (${Utils.toProperCase(scientificName)})`}</h1>
+                <p></p>
+                <p>{body}</p>
+                <div className={classes.citations_wrapper}>
+                    <p>Citations:</p>
+                    {citations.length > 0 &&
+                        citations.map((c, i) => (
+                            <Link key={`cite-${i}`} href={c}>
+                                {i + 1}
+                            </Link>
+                        ))}
+                </div>
+            </Paper>
+        </div>
     );
+};
+
+Description.propTypes = {
+    animalInfo: PropTypes.shape({
+        commonName: PropTypes.string.isRequired,
+        scientificName: PropTypes.string.isRequired,
+        body: PropTypes.string.isRequired,
+        citations: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }).isRequired,
 };
 
 export default Description;

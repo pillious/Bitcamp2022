@@ -1,12 +1,13 @@
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useCallback, useContext, useState } from "react";
 import { useSelector } from "react-redux";
-import Map, { NavigationControl, Popup } from "react-map-gl";
+import Map, { NavigationControl } from "react-map-gl";
 import MapContext from "../../store/map-context";
 import * as Constants from "../../utils/constants";
-import Description from "./Description";
 import Vectors from "./Vectors";
 import Markers from "./Markers";
 import useSearch from "../../hooks/useSearch";
+import MarkerPopup from "./MarkerPopup";
+import Description from "./Description";
 
 // Map initial viewport settings
 const INITIAL_VIEW_STATE = {
@@ -16,17 +17,31 @@ const INITIAL_VIEW_STATE = {
 };
 
 const TrackerMap = () => {
+    useSearch(); // Custom hook - gets marker data by animal name
+
     const mapRef = useContext(MapContext);
-    const markersArr = useSelector((state) => state.map.markers);
+    const markersObj = useSelector((state) => {
+        if (state.map.markers.length === 0) return [];
+        return state.map.markers.map((o) => JSON.parse(o));
+    });
 
     const [popupInfo, setPopupInfo] = useState(null);
+    const openPopup = useCallback(
+        (lat, lng, descObj) => setPopupInfo({ lat, lng, desc: descObj }),
+        [setPopupInfo]
+    );
+    const closePopup = useCallback(() => setPopupInfo(null), [setPopupInfo]);
 
-    const openPopup = (lat, lng, descObj) =>
-        setPopupInfo({ lat, lng, desc: descObj });
+    const onZoom = () => {
+        if (markersObj[0].boundingBox) {
+            mapRef.current.fitBounds(markersObj[0].boundingBox, {
+                padding: 40,
+                duration: 3000,
+            });
+            closePopup();
+        }
+    };
 
-    useSearch();
-
-    // return useMemo(() => {
     console.log("Map component rendered");
     return (
         <Fragment>
@@ -39,13 +54,11 @@ const TrackerMap = () => {
                 style={{ width: "100%", height: "500px" }}
                 mapStyle={Constants.MAP_STYLE}
                 mapboxAccessToken={Constants.MAPBOX_KEY}
-                styleDiffing={false}
                 ref={mapRef}
             >
-                {Array.isArray(markersArr) &&
-                    markersArr.length > 0 &&
-                    markersArr.map((strObj, idx) => {
-                        let obj = JSON.parse(strObj);
+                {Array.isArray(markersObj) &&
+                    markersObj.length > 0 &&
+                    markersObj.map((obj, idx) => {
                         return (
                             // The key must stay constant between rerenders to
                             // prevent children elements from being forced to rerender,
@@ -61,24 +74,21 @@ const TrackerMap = () => {
                     })}
 
                 {popupInfo && (
-                    <Popup
-                        longitude={Number(popupInfo.lng)}
-                        latitude={Number(popupInfo.lat)}
-                        anchor="top"
-                        onClose={() => setPopupInfo(null)}
-                        closeOnClick={false}
-                    >
-                        You are here
-                    </Popup>
+                    <MarkerPopup
+                        popupInfo={popupInfo}
+                        closePopup={closePopup}
+                        zoomIn={onZoom}
+                    />
                 )}
 
                 <NavigationControl />
             </Map>
 
-            <Description />
+            {markersObj.length > 0 && (
+                <Description animalInfo={markersObj[0].desc} />
+            )}
         </Fragment>
     );
-    // }, [markersArr]);
 };
 
 export default TrackerMap;

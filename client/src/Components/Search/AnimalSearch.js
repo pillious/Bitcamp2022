@@ -6,6 +6,7 @@ import * as Utils from "../../utils/utils";
 import { useGetAllDistinctNamesQuery } from "../../services/mapApi";
 import { mapActions } from "../../store/map-slice";
 import PropTypes from "prop-types";
+import classes from "./AnimalSearch.module.css";
 
 const AnimalSearch = (props) => {
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const AnimalSearch = (props) => {
         <Autocomplete
             disablePortal
             id="animal_autocomplete"
-            sx={{ width: 300 }}
+            className={classes.Autocomplete}
             value={props.value}
             options={animalNames.map((a) => Utils.toProperCase(a))}
             onChange={(event, newVal) => props.updateSearch(newVal)}

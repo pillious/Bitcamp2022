@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Source, Layer } from "react-map-gl";
 import * as Utils from "../../utils/utils";
 import PropTypes from "prop-types";
@@ -24,11 +25,7 @@ const Vectors = ({ markersObj }) => {
     const color = Utils.buildHSLString([markersObj.color[0], 100, 50]);
 
     return (
-        <Source
-            id="source"
-            type="geojson"
-            data={featureCollection}
-        >
+        <Source id="source" type="geojson" data={featureCollection}>
             <Layer
                 id="line_layer"
                 type="line"
@@ -43,14 +40,10 @@ Vectors.propTypes = {
     markersObj: PropTypes.object.isRequired,
 };
 
-// const propsAreEqual = (prevProps, nextProps) => {
-//     console.log("Comparing props");
-//     console.log(nextProps);
-//     console.log(prevProps);
+// Simple props comparison.
+// Checks if the animal associated with the vectors changed.
+const propsAreEqual = (prevProps, nextProps) =>
+    prevProps.markersObj.desc.commonName ===
+    nextProps.markersObj.desc.commonName;
 
-//     return false;
-// };
-
-// export default memo(Vectors, propsAreEqual);
-
-export default Vectors;
+export default memo(Vectors, propsAreEqual);
