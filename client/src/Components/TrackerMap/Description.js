@@ -1,20 +1,22 @@
+import { forwardRef } from "react";
 import PropTypes from "prop-types";
 import * as Utils from "../../utils/utils";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import classes from "./Description.module.css";
 
-const Description = ({ animalInfo }) => {
+const Description = forwardRef((props, ref) => {
+    const { animalInfo } = props;
     const { commonName, scientificName, body, citations } = animalInfo;
 
     return (
-        <div className={classes.wrapper}>
+        <div className={classes.wrapper} ref={ref}>
             <Paper className={classes.Paper} elevation={5}>
                 <h1 className={classes.name}>{`${Utils.toProperCase(
                     commonName
                 )} (${Utils.toProperCase(scientificName)})`}</h1>
                 <p></p>
-                <p>{body}</p>
+                <p className={classes.body}>{body}</p>
                 <div className={classes.citations_wrapper}>
                     <p>Citations:</p>
                     {citations.length > 0 &&
@@ -27,7 +29,9 @@ const Description = ({ animalInfo }) => {
             </Paper>
         </div>
     );
-};
+});
+
+Description.displayName = "Description";
 
 Description.propTypes = {
     animalInfo: PropTypes.shape({

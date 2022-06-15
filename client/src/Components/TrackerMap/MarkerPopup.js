@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 import Link from "@mui/material/Link";
 import classes from "./MarkerPopup.module.css";
 
-const MarkerPopup = ({ popupInfo, closePopup, zoomIn }) => {
+const MarkerPopup = (props) => {
+    const { popupInfo, closePopup, zoomIn, onLearnMoreClick } = props;
+
     return (
         <Popup
             longitude={Number(popupInfo.lng)}
@@ -21,7 +23,11 @@ const MarkerPopup = ({ popupInfo, closePopup, zoomIn }) => {
                     popupInfo.desc.commonName
                 )}`}</h1>
 
-                <Link component="button" className={classes.desc_link}>
+                <Link
+                    component="button"
+                    className={classes.desc_link}
+                    onClick={onLearnMoreClick}
+                >
                     Learn more
                 </Link>
                 <p className={classes.latlng}>{`(${Number(
@@ -52,6 +58,7 @@ MarkerPopup.propTypes = {
     }).isRequired,
     closePopup: PropTypes.func.isRequired,
     zoomIn: PropTypes.func.isRequired,
+    onLearnMoreClick: PropTypes.func.isRequired,
 };
 
 export default MarkerPopup;
