@@ -2,20 +2,35 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    margin: 0.5rem;
+}
+
+.wrapper:focus {
+    border: 1px solid blue;
 }
 
 .Paper {
     padding: 0.5rem;
-    margin: 1rem;
-    max-width: 750px;
+    width: max(75vw - 1rem, 280px);
 }
 
 .name {
     font-size: 1rem;
 }
 
+/* https://mui.com/material-ui/customization/breakpoints/ */
+@media screen and (max-width: 600px) {
+    body {
+        font-size: 0.875rem;
+    }
+}
+
 .citations_wrapper {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.citations_wrapper p {
+    margin: 0;
 }

@@ -6,6 +6,13 @@ import App from "./App";
 import store from "./store/index";
 import "./index.css";
 import { MapContextProvider } from "./store/map-context";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const darkTheme = createTheme({
+    palette: {
+        mode: "dark",
+    },
+});
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -13,7 +20,9 @@ root.render(
     <React.StrictMode>
         <Provider store={store}>
             <MapContextProvider>
-                <App />
+                <ThemeProvider theme={darkTheme}>
+                    <App />
+                </ThemeProvider>
             </MapContextProvider>
         </Provider>
     </React.StrictMode>
