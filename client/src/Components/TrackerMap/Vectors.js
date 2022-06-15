@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { Source, Layer } from "react-map-gl";
 import * as Utils from "../../utils/utils";
 import PropTypes from "prop-types";
 
 const Vectors = ({ markersObj }) => {
-    console.log("Vectors rendered.")
+    console.log("Vectors rendered.");
 
     // https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/
     let featureCollection = {
@@ -24,13 +25,9 @@ const Vectors = ({ markersObj }) => {
     const color = Utils.buildHSLString([markersObj.color[0], 100, 50]);
 
     return (
-        <Source
-            id={`${markersObj.markers[0].animalId}_source`}
-            type="geojson"
-            data={featureCollection}
-        >
+        <Source id="source" type="geojson" data={featureCollection}>
             <Layer
-                id={`$${markersObj.markers[0].animalId}_line_layer`}
+                id="line_layer"
                 type="line"
                 layout={{ "line-join": "round", "line-cap": "round" }}
                 paint={{ "line-color": color, "line-width": 1 }}
@@ -43,4 +40,10 @@ Vectors.propTypes = {
     markersObj: PropTypes.object.isRequired,
 };
 
-export default Vectors;
+// Simple props comparison.
+// Checks if the animal associated with the vectors changed.
+const propsAreEqual = (prevProps, nextProps) =>
+    prevProps.markersObj.desc.commonName ===
+    nextProps.markersObj.desc.commonName;
+
+export default memo(Vectors, propsAreEqual);

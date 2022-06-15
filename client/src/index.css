@@ -22,3 +22,8 @@ code {
 #deckgl-overlay {
     position: relative !important;
 }
+
+/* Override styles of react-map-gl popups */
+.mapboxgl-popup-content {
+    padding: 4px;
+}

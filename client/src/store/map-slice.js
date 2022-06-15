@@ -15,17 +15,18 @@ const mapSlice = createSlice({
         setMarkers(state, action) {
             const { payload } = action;
 
-            if (payload && Array.isArray(payload)) {
+            if (payload) {
                 let replacement = [];
 
-                if (payload.length > 0) {
+                if (payload.markers.length > 0) {
                     let markerColor = Utils.pastelHSLColor();
 
-                    const boundingBox = Utils.buildBoundingBox(payload);
-                    const vectors = Utils.buildVectors(payload);
+                    const boundingBox = Utils.buildBoundingBox(payload.markers);
+                    const vectors = Utils.buildVectors(payload.markers);
 
                     const obj = {
-                        markers: payload,
+                        markers: payload.markers,
+                        desc: payload.desc,
                         vectors,
                         boundingBox,
                         color: markerColor,
@@ -35,7 +36,8 @@ const mapSlice = createSlice({
 
                 state.markers = replacement;
             } else {
-                console.error("setMarkers() -> payload not an array.");
+                console.log(payload);
+                console.error("setMarkers() -> payload is invalid.");
             }
         },
         setAnimalNames(state, action) {
@@ -47,7 +49,7 @@ const mapSlice = createSlice({
         },
         setAnimalSearchTerm(state, action) {
             const { payload } = action;
-            if (payload) state.animalSearchTerm = payload; 
+            if (payload) state.animalSearchTerm = payload;
         },
     },
 });

@@ -1,23 +1,41 @@
-/* Add any dependencies you need . */
-/* import your components */
-// import AnimalSearch from "./AnimalSearch";
-
-import SubmitButton from "./SubmitButton";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { mapActions } from "../../store/map-slice";
 import AnimalSearch from "./AnimalSearch";
-// import ContinentSearch from "./ContinentSearch";
+import * as Constants from "../../utils/constants";
+import * as Utils from "../../utils/utils";
 import classes from "./Search.module.css";
+import Button from "@mui/material/Button";
 
 const Search = () => {
-  return (
-    <div className={classes.search_row}>
-      <div className={classes.search_boxes}>
-        <div className={classes.animal_search_wrapper}>
-          <AnimalSearch/>
+    const dispatch = useDispatch();
+
+    const [value, setValue] = useState(
+        Utils.toProperCase(Constants.INITIAL_ANIMAL_ONLOAD)
+    );
+
+    const submitHandler = () => {
+        if (value) dispatch(mapActions.setAnimalSearchTerm(value));
+    };
+
+    const updateSearch = (animal) => setValue(animal);
+
+    return (
+        <div className={classes.search_row}>
+            <div className={classes.search_boxes}>
+                <div className={classes.animal_search_wrapper}>
+                    <AnimalSearch value={value} updateSearch={updateSearch} />
+                </div>
+            </div>
+            <Button
+                variant="contained"
+                className={classes.submit_button}
+                onClick={submitHandler}
+            >
+                Submit
+            </Button>
         </div>
-      </div>
-      <SubmitButton className={classes.submit_button}/>
-    </div>
-  )
-}
+    );
+};
 
 export default Search;
