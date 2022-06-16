@@ -1,5 +1,3 @@
-export const INITIAL_ANIMAL_ONLOAD = "PLAINS ZEBRA";
-
 /**
  * API Request Constants
  */
@@ -21,3 +19,10 @@ export const MAPBOX_KEY =
 export const MAP_STYLE = "mapbox://styles/mapbox/satellite-v9";
 export const MARKER_IMG =
     "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png";
+export const INITIAL_ANIMAL_ONLOAD = "PLAINS ZEBRA";
+// Map initial viewport settings
+export const INITIAL_VIEW_STATE = {
+    longitude: 24,
+    latitude: -20,
+    zoom: 0,
+};

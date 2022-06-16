@@ -3,6 +3,7 @@ import * as Utils from "../utils/utils";
 import * as Constants from "../utils/constants";
 
 const initialState = {
+    viewState: Constants.INITIAL_VIEW_STATE,
     animalNames: [],
     markers: [],
     animalSearchTerm: Constants.INITIAL_ANIMAL_ONLOAD,
@@ -50,6 +51,9 @@ const mapSlice = createSlice({
         setAnimalSearchTerm(state, action) {
             const { payload } = action;
             if (payload) state.animalSearchTerm = payload;
+        },
+        setMapViewState(state, action) {
+            state.viewState = action.payload;
         },
     },
 });

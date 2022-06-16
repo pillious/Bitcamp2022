@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 // eslint-disable-next-line no-unused-vars
 const Markers = ({ markersObj, openPopup }) => {
-    console.log("Markers rendered");
+    // console.log("Markers rendered");
 
     const markerElems = markersObj.markers.map((marker, idx) => (
         <Fragment key={`f${idx}`}>
@@ -18,7 +18,7 @@ const Markers = ({ markersObj, openPopup }) => {
                     // If we let the click event propagates to the map, it will immediately close the popup
                     // with `closeOnClick: true`
                     e.originalEvent.stopPropagation();
-                    openPopup(marker.lat, marker.long, markersObj.desc);
+                    openPopup(marker.lat, marker.long, markersObj.desc, marker);
                 }}
             >
                 <Pin color={Utils.buildHSLString(markersObj.color)} />
@@ -38,7 +38,29 @@ const propsAreEqual = (prevProps, nextProps) =>
         nextProps.markersObj.desc.commonName;
 
 Markers.propTypes = {
-    markersObj: PropTypes.object.isRequired,
+    markersObj: PropTypes.shape({
+        boundingBox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+            .isRequired,
+        color: PropTypes.arrayOf(PropTypes.number).isRequired,
+        desc: PropTypes.shape({
+            commonName: PropTypes.string.isRequired,
+            scientificName: PropTypes.string.isRequired,
+            body: PropTypes.string.isRequired,
+            citations: PropTypes.arrayOf(PropTypes.string).isRequired,
+        }).isRequired,
+        markers: PropTypes.arrayOf(
+            PropTypes.shape({
+                animalId: PropTypes.string.isRequired,
+                animalName: PropTypes.string.isRequired,
+                datetime: PropTypes.string.isRequired,
+                lat: PropTypes.number.isRequired,
+                long: PropTypes.number.isRequired,
+            })
+        ).isRequired,
+        vectors: PropTypes.arrayOf(
+            PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+        ),
+    }).isRequired,
     openPopup: PropTypes.func.isRequired,
 };
 

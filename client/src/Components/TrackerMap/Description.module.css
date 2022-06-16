@@ -16,6 +16,7 @@
 
 .name {
     font-size: 1rem;
+    font-weight: 400;
 }
 
 /* https://mui.com/material-ui/customization/breakpoints/ */

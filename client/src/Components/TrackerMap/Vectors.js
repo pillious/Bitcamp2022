@@ -4,7 +4,7 @@ import * as Utils from "../../utils/utils";
 import PropTypes from "prop-types";
 
 const Vectors = ({ markersObj }) => {
-    console.log("Vectors rendered.");
+    // console.log("Vectors rendered.");
 
     // https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/
     let featureCollection = {

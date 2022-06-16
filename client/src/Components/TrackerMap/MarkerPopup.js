@@ -8,6 +8,8 @@ import classes from "./MarkerPopup.module.css";
 const MarkerPopup = (props) => {
     const { popupInfo, closePopup, zoomIn, onLearnMoreClick } = props;
 
+    console.log(popupInfo);
+
     return (
         <Popup
             longitude={Number(popupInfo.lng)}
@@ -54,6 +56,13 @@ MarkerPopup.propTypes = {
             scientificName: PropTypes.string.isRequired,
             body: PropTypes.string.isRequired,
             citations: PropTypes.arrayOf(PropTypes.string).isRequired,
+        }),
+        marker: PropTypes.shape({
+            animalId: PropTypes.string.isRequired,
+            animalName: PropTypes.string.isRequired,
+            datetime: PropTypes.string.isRequired,
+            lat: PropTypes.number.isRequired,
+            long: PropTypes.number.isRequired,
         }),
     }).isRequired,
     closePopup: PropTypes.func.isRequired,

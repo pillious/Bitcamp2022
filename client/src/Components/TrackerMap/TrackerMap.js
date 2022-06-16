@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useContext, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Map, { NavigationControl } from "react-map-gl";
 import MapContext from "../../store/map-context";
 import * as Constants from "../../utils/constants";
@@ -8,17 +8,13 @@ import Markers from "./Markers";
 import useSearch from "../../hooks/useSearch";
 import MarkerPopup from "./MarkerPopup";
 import Description from "./Description";
+import { mapActions } from "../../store/map-slice";
 import classes from "./TrackerMap.module.css";
 
-
-// Map initial viewport settings
-const INITIAL_VIEW_STATE = {
-    longitude: 24,
-    latitude: -20,
-    zoom: 0,
-};
-
 const TrackerMap = () => {
+    const mapViewState = useSelector((state) => state.map.viewState);
+    const dispatch = useDispatch();
+
     useSearch(); // Custom hook - gets marker data by animal name
 
     const descRef = useRef(null);
@@ -29,14 +25,19 @@ const TrackerMap = () => {
         return state.map.markers.map((o) => JSON.parse(o));
     });
 
+    const onMove = useCallback((evt) => {
+        dispatch(mapActions.setMapViewState(evt.viewState));
+    }, []);
+
     const [popupInfo, setPopupInfo] = useState(null);
     const openPopup = useCallback(
-        (lat, lng, descObj) => setPopupInfo({ lat, lng, desc: descObj }),
+        (lat, lng, descObj, markerObj) =>
+            setPopupInfo({ lat, lng, desc: descObj, marker: markerObj }),
         [setPopupInfo]
     );
     const closePopup = useCallback(() => setPopupInfo(null), [setPopupInfo]);
 
-    const onZoom = () => {
+    const onZoom = useCallback(() => {
         if (markersObj[0].boundingBox) {
             mapRef.current.fitBounds(markersObj[0].boundingBox, {
                 padding: 40,
@@ -44,19 +45,21 @@ const TrackerMap = () => {
             });
             closePopup();
         }
-    };
+    }, [closePopup, markersObj]);
 
-    const scrollToDesc = () => {
+    // TODO focus on scoll
+    const scrollToDesc = useCallback(() => {
         descRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-        descRef.current.focus(); // TODO focus on scoll
-    };
+    }, [descRef]);
 
-    console.log("Map component rendered");
+    // console.log("Map component rendered");
+
     return (
         <div className={classes.container}>
             <div className={classes.map_wrapper}>
                 <Map
-                    initialViewState={INITIAL_VIEW_STATE}
+                    {...mapViewState}
+                    onMove={onMove}
                     dragRotate={false}
                     touchPitch={false}
                     // Currently no way to disable rotate w/o disabling zoom.

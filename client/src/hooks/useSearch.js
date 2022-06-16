@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetAnimalMarkersByNameQuery } from "../services/mapApi";
 import { mapActions } from "../store/map-slice";
+import * as Constants from "../utils/constants";
 
 // https://redux-toolkit.js.org/rtk-query/api/created-api/hooks#usequery
 const useSearch = () => {
@@ -31,9 +32,20 @@ const useSearch = () => {
 
     useEffect(() => {
         if (data && Array.isArray(data.data.markers)) {
-            dispatch(mapActions.setMarkers(data.data));
+            // Sort markers in ascending order according to datetime.
+            // This is done since the vector implementation simply connects adjacent array elements.
+            let copy = Object.assign({}, JSON.parse(JSON.stringify(data.data)));
+            copy.markers = sortByAscTime(copy.markers);
+            dispatch(mapActions.setMarkers(copy));
+            dispatch(mapActions.setMapViewState(Constants.INITIAL_VIEW_STATE));
         }
     }, [data]);
+
+    const sortByAscTime = (markersArr) =>
+        markersArr.sort(
+            (a, b) =>
+                Number(new Date(a.datetime)) - Number(new Date(b.datetime))
+        );
 
     // useEffect(() => {
     //     setIsLoading(isFetching)
