@@ -4,7 +4,7 @@
 
 Devpost: [Link](https://devpost.com/software/wild-stats)
 
-Client issue: React-map-gl not working on production build. Transpilation issue w/ babel.
+Client issue: React-map-gl not working on production build. Transpilation issue w/ babel + create-react-app.
 Solution: https://docs.mapbox.com/mapbox-gl-js/guides/install/#transpiling
 
 -   change browserlist config in package.json.
