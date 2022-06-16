@@ -27,6 +27,7 @@ const AnimalSearch = (props) => {
             options={animalNames.map((a) => Utils.toProperCase(a))}
             onChange={(event, newVal) => props.updateSearch(newVal)}
             renderInput={(params) => <TextField {...params} label="Animals" />}
+            disableClearable
         />
     );
 };
