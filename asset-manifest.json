@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/Bitcamp2022/static/css/main.3fdc682e.css",
-    "main.js": "/Bitcamp2022/static/js/main.88431c4f.js",
-    "static/js/483.0cc77026.chunk.js": "/Bitcamp2022/static/js/483.0cc77026.chunk.js",
+    "main.css": "/Bitcamp2022/static/css/main.66b730e7.css",
+    "main.js": "/Bitcamp2022/static/js/main.4142653b.js",
+    "static/js/483.ab793cc6.chunk.js": "/Bitcamp2022/static/js/483.ab793cc6.chunk.js",
     "static/js/787.c4e7f8f9.chunk.js": "/Bitcamp2022/static/js/787.c4e7f8f9.chunk.js",
     "index.html": "/Bitcamp2022/index.html",
-    "main.3fdc682e.css.map": "/Bitcamp2022/static/css/main.3fdc682e.css.map",
-    "main.88431c4f.js.map": "/Bitcamp2022/static/js/main.88431c4f.js.map",
-    "483.0cc77026.chunk.js.map": "/Bitcamp2022/static/js/483.0cc77026.chunk.js.map",
+    "main.66b730e7.css.map": "/Bitcamp2022/static/css/main.66b730e7.css.map",
+    "main.4142653b.js.map": "/Bitcamp2022/static/js/main.4142653b.js.map",
+    "483.ab793cc6.chunk.js.map": "/Bitcamp2022/static/js/483.ab793cc6.chunk.js.map",
     "787.c4e7f8f9.chunk.js.map": "/Bitcamp2022/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3fdc682e.css",
-    "static/js/main.88431c4f.js"
+    "static/css/main.66b730e7.css",
+    "static/js/main.4142653b.js"
   ]
 }
