@@ -3,6 +3,7 @@ import { Marker } from "react-map-gl";
 import Pin from "./Pin";
 import * as Utils from "../../utils/utils";
 import PropTypes from "prop-types";
+import classes from "./Markers.module.css";
 
 // eslint-disable-next-line no-unused-vars
 const Markers = ({ markersObj, openPopup }) => {
@@ -22,6 +23,14 @@ const Markers = ({ markersObj, openPopup }) => {
                 }}
             >
                 <Pin color={Utils.buildHSLString(markersObj.color)} />
+                <div
+                    className={classes.marker_num}
+                    style={{
+                        color: `${Utils.buildHSLString(markersObj.color)}`,
+                    }}
+                >
+                    {idx + 1}
+                </div>
             </Marker>
         </Fragment>
     ));

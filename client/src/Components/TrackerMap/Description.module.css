@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    margin: 0.5rem;
+    margin: 1.5rem 0;
 }
 
 .wrapper:focus {
@@ -11,7 +11,7 @@
 
 .Paper {
     padding: 0.5rem;
-    width: max(75vw - 1rem, 280px);
+    width: max(min(75vw - 1rem, 750px), 280px);
 }
 
 .name {

@@ -11,7 +11,7 @@ const Description = forwardRef((props, ref) => {
 
     return (
         <div className={classes.wrapper} ref={ref}>
-            <Paper className={classes.Paper} elevation={1}>
+            <Paper className={classes.Paper} elevation={2}>
                 <h1 className={classes.name}>{`${Utils.toProperCase(
                     commonName
                 )} (${Utils.toProperCase(scientificName)})`}:</h1>

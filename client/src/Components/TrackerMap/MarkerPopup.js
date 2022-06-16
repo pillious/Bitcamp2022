@@ -8,8 +8,6 @@ import classes from "./MarkerPopup.module.css";
 const MarkerPopup = (props) => {
     const { popupInfo, closePopup, zoomIn, onLearnMoreClick } = props;
 
-    console.log(popupInfo);
-
     return (
         <Popup
             longitude={Number(popupInfo.lng)}
@@ -32,6 +30,7 @@ const MarkerPopup = (props) => {
                 >
                     Learn more
                 </Link>
+                <p className={classes.datetime}>{new Date(popupInfo.marker.datetime).toLocaleString()}</p>
                 <p className={classes.latlng}>{`(${Number(
                     popupInfo.lat
                 ).toFixed(2)}, ${Number(popupInfo.lng).toFixed(2)})`}</p>
