@@ -1,4 +1,11 @@
-import { Fragment, useCallback, useContext, useRef, useState } from "react";
+import {
+    Fragment,
+    useCallback,
+    useContext,
+    // useEffect,
+    useRef,
+    useState,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Map, { NavigationControl } from "react-map-gl";
 import MapContext from "../../store/map-context";
@@ -37,17 +44,6 @@ const TrackerMap = () => {
     );
     const closePopup = useCallback(() => setPopupInfo(null), [setPopupInfo]);
 
-    const onZoom = useCallback(() => {
-        if (markersObj[0].boundingBox) {
-            mapRef.current.fitBounds(markersObj[0].boundingBox, {
-                padding: 40,
-                duration: 3000,
-            });
-            closePopup();
-        }
-    }, [closePopup, markersObj]);
-
-    // TODO focus on scoll
     const scrollToDesc = useCallback(() => {
         descRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }, [descRef]);
@@ -90,7 +86,14 @@ const TrackerMap = () => {
                         <MarkerPopup
                             popupInfo={popupInfo}
                             closePopup={closePopup}
-                            zoomIn={onZoom}
+                            zoomIn={() =>
+                                dispatch(
+                                    mapActions.zoomToBoundingBox({
+                                        mapRef,
+                                        boundingBox: markersObj[0].boundingBox,
+                                    })
+                                )
+                            }
                             onLearnMoreClick={scrollToDesc}
                         />
                     )}

@@ -7,6 +7,7 @@ const initialState = {
     animalNames: [],
     markers: [],
     animalSearchTerm: Constants.INITIAL_ANIMAL_ONLOAD,
+    isLoading: false,
 };
 
 const mapSlice = createSlice({
@@ -17,22 +18,33 @@ const mapSlice = createSlice({
             const { payload } = action;
 
             if (payload) {
+                const { markers, desc, doZoom, mapRef } = payload;
+
                 let replacement = [];
 
-                if (payload.markers.length > 0) {
+                if (markers.length > 0) {
                     let markerColor = Utils.pastelHSLColor();
 
-                    const boundingBox = Utils.buildBoundingBox(payload.markers);
-                    const vectors = Utils.buildVectors(payload.markers);
+                    const boundingBox = Utils.buildBoundingBox(markers);
+                    const vectors = Utils.buildVectors(markers);
 
                     const obj = {
-                        markers: payload.markers,
-                        desc: payload.desc,
+                        markers: markers,
+                        desc: desc,
                         vectors,
                         boundingBox,
                         color: markerColor,
                     };
                     replacement.push(JSON.stringify(obj));
+
+                    if (doZoom) {
+                        mapSlice.caseReducers.zoomToBoundingBox(state, {
+                            payload: {
+                                mapRef: mapRef,
+                                boundingBox,
+                            },
+                        });
+                    }
                 }
 
                 state.markers = replacement;
@@ -54,6 +66,22 @@ const mapSlice = createSlice({
         },
         setMapViewState(state, action) {
             state.viewState = action.payload;
+        },
+        setIsLoading(state, action) {
+            state.isLoading = action.payload;
+        },
+        zoomToBoundingBox(state, action) {
+            const {
+                mapRef,
+                boundingBox,
+                padding = 40,
+                duration = 3000,
+            } = action.payload;
+
+            mapRef.current.fitBounds(boundingBox, {
+                padding,
+                duration,
+            });
         },
     },
 });

@@ -30,11 +30,12 @@
 .name {
     font-weight: normal;
     font-size: 14px;
+    line-height: 14px;
 }
 
 .desc_link {
     font-size: 12px;
-    padding-bottom: 0.5rem !important;
+    padding: 0.5rem 0 !important;
 }
 
 .datetime {

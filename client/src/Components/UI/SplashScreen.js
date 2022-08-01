@@ -1,21 +1,34 @@
-import PropTypes from "prop-types";
+import { useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import classes from "./SplashScreen.module.css";
 
-const SplashScreen = (props) => {
-    return (
-        <div className={`${classes.wrapper} ${!props.show ? classes.hidden : classes.show}`}>
+const SplashScreen = () => {
+    const [showSplashScreen, setShowSplashScreen] = useState(true);
+    const closeSplashScreen = () => setShowSplashScreen(false);
+
+    useLayoutEffect(() => {
+        if (showSplashScreen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+    }, [showSplashScreen]);
+
+    return createPortal(
+        <div
+            className={`${classes.wrapper} ${
+                !showSplashScreen ? classes.hidden : classes.show
+            }`}
+        >
             <h1 className={classes.title}>WilderTrace</h1>
-            <p className={classes.subtitle}>View the migration paths of animals.</p>
-            <button onClick={props.onClose} className={classes.button}>
+            <p className={classes.subtitle}>
+                View the migration paths of animals.
+            </p>
+            <button onClick={closeSplashScreen} className={classes.button}>
                 EXPLORE!
             </button>
-        </div>
+        </div>, document.getElementById("splashscreen")
     );
-};
-
-SplashScreen.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired,
 };
 
 export default SplashScreen;

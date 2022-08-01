@@ -30,16 +30,18 @@ const MarkerPopup = (props) => {
                 >
                     Learn more
                 </Link>
-                <p className={classes.datetime}>{new Date(popupInfo.marker.datetime).toLocaleString()}</p>
-                <p className={classes.latlng}>{`(${Number(
+                <p className={classes.datetime}>
+                    {new Date(popupInfo.marker.datetime).toLocaleString()}
+                </p>
+                <p className={classes.latlng}>{`Lat: ${Number(
                     popupInfo.lat
-                ).toFixed(2)}, ${Number(popupInfo.lng).toFixed(2)})`}</p>
+                ).toFixed(2)}, Lng: ${Number(popupInfo.lng).toFixed(2)}`}</p>
                 <Link
                     component="button"
                     className={classes.zoom_link}
                     onClick={zoomIn}
                 >
-                    Take a closer look!
+                    (Zoom In)
                 </Link>
             </div>
         </Popup>
